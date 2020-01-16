@@ -12,10 +12,9 @@ describe('ship validity tests', () => {
   })
 
   test("Checks if ship is hit", () => {
-    const lifes = ship.life;
-    expect(lifes[3]).toBe(false);
-    ship.hit(3);
-    expect(lifes[3]).toBe(true);
+    expect(ship.life).toBe(ship.size);
+    ship.hit();
+    expect(ship.life).toBe(ship.size - 1);
   })
 
   test("Checks if ship is sunk", () => {

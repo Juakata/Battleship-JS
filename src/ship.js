@@ -1,15 +1,14 @@
 const Ship = (size, name) => ({
   size,
   name,
-  life: Array(size).fill(false),
-  hit(n) { this.life[n] = true },
+  life: size,
+  hit() { this.life -= 1 },
   isSunk() {
-    for (let i = 0; i < this.size; i += 1) {
-      if (this.life[i] === false) {
-        return false;
-      }
+    if (this.life == 0) {
+      return true;
+    } else {
+      return false;
     }
-    return true;
   }
 });
 

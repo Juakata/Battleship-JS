@@ -5,11 +5,13 @@ describe('gameboard validity tests', () => {
   let gameBoard;
   let board;
   let ship;
+  let ship2;
 
   beforeEach(() => {
     gameBoard = GameBoard();
     board = gameBoard.createBoard();
     ship = Ship(5, 'A');
+    ship2 = Ship(4, 'B')
   });
 
   test('creates valid gameboard', () => {
@@ -38,6 +40,19 @@ describe('gameboard validity tests', () => {
     expect(place).toBe(false);
   });
 
+  test('Should not allow placing beside another ship', () => {
+    let place = gameBoard.canPlace(0, 0, board, 'vertical', ship);
+    expect(place).toBe(true);
+    gameBoard.addShip(0, 0, board, 'vertical', ship);
+    place = gameBoard.canPlace(0, 1, board, 'vertical', ship2);
+    gameBoard.addShip(0, 1, board, 'vertical', ship2);
+    expect(board[0][1]).toBe(false);
+    gameBoard.addShip(5, 0, board, 'vertical', ship2);
+    expect(board[5][0]).toBe(false);
+    gameBoard.addShip(9, 0, board, 'horizontal', ship);
+    gameBoard.addShip(9, 5, board, 'horizontal', ship2);
+    expect(board[9][5]).toBe(false);
+  });
 });
 
 describe('Receive Attack function', () => {
@@ -55,12 +70,12 @@ describe('Receive Attack function', () => {
 
   test('hits a ship', () => {
     gameBoard.addShip(0, 4, board, 'horizontal', ships[0]);
-    gameBoard.receiveAttack(0, 5, board, 1, ships);
-    expect(ships[0].life[1]).toBe(true);
+    gameBoard.receiveAttack(0, 5, board, ships);
+    expect(ships[0].life).toBe(ships[0].size - 1);
   });
 
   test('hits the water', () => {
-    gameBoard.receiveAttack(0, 0, board, 1, ships);
+    gameBoard.receiveAttack(0, 0, board, ships);
     expect(board[0][0]).toBe(0);
   });
 
@@ -70,9 +85,7 @@ describe('Receive Attack function', () => {
 
   test('all ships are sunk', () => {
     ships.forEach(ship => {
-      for (let i = 0; i < ship.life.length; i += 1) {
-        ship.life[i] = true;
-      }
+      ship.life = 0;
     });
     expect(gameBoard.allShipsSunk(ships)).toBe(true);
   });
