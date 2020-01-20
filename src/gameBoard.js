@@ -22,7 +22,7 @@ const GameBoard = () => {
   }
 
   const checkNull = (x, y, board) => {
-    if(typeof board[x] === 'undefined') {
+    if (typeof board[x] === 'undefined') {
       return true;
     } else if (typeof board[x][y] === 'undefined') {
       return true;
@@ -31,26 +31,30 @@ const GameBoard = () => {
   }
 
   const anyBoatArround = (x, y, board, ship) => {
-    if(board[x][y] === 'string' && board[x][y] !== ship.name) {
+    if (board[x][y] === 'string' && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x + 1, y + 1, board) && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x + 1, y + 1, board) && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x - 1, y - 1, board) && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x - 1, y - 1, board) && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x + 1, y - 1, board) && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x + 1, y - 1, board) && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if(!checkNull(x - 1, y + 1, board) && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
+    } else if (!checkNull(x - 1, y + 1, board) && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
     }
     return false;
+  }
+
+  const getShips = () => {
+    return [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   }
 
   const canPlace = (x, y, board, direction, ship) => {
@@ -102,7 +106,7 @@ const GameBoard = () => {
     return ships.every(ship => ship.isSunk());
   }
 
-  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull };
+  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull, getShips };
 }
 
 module.exports = GameBoard;
