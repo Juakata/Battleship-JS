@@ -53,10 +53,6 @@ const GameBoard = () => {
     return false;
   }
 
-  const getShips = () => {
-    return [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
-  }
-
   const canPlace = (x, y, board, direction, ship) => {
     if (direction == 'horizontal') {
       for (let i = y; i < ship.size + y; i += 1) {
@@ -106,7 +102,7 @@ const GameBoard = () => {
     return ships.every(ship => ship.isSunk());
   }
 
-  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull, getShips };
+  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull };
 }
 
 module.exports = GameBoard;

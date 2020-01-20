@@ -1,4 +1,4 @@
 import './style.css';
-import domManager from './gameLoop';
+import gameLoop from './gameLoop';
 
-domManager.renderBoard();
+gameLoop();

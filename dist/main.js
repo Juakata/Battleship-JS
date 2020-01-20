@@ -81,15 +81,308 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+const GameBoard = () => {
+  const createBoard = () => {
+    const board = Array(10).fill(false).map(x => Array(10).fill(false));
+    return board;
+  }
+
+  const canMove = (x, y, board) => {
+    if (typeof board[x, y] === 'integer') {
+      return false;
+    }
+    return true;
+  }
+
+  const getOptions = () => {
+    arr = [];
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        arr.push([i, j]);
+      }
+    }
+    return arr;
+  }
+
+  const checkNull = (x, y, board) => {
+    if (typeof board[x] === 'undefined') {
+      return true;
+    } else if (typeof board[x][y] === 'undefined') {
+      return true;
+    }
+    return false;
+  }
+
+  const anyBoatArround = (x, y, board, ship) => {
+    if (board[x][y] === 'string' && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x + 1, y + 1, board) && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x - 1, y - 1, board) && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x + 1, y - 1, board) && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    } else if (!checkNull(x - 1, y + 1, board) && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
+      return true;
+    }
+    return false;
+  }
+
+  const canPlace = (x, y, board, direction, ship) => {
+    if (direction == 'horizontal') {
+      for (let i = y; i < ship.size + y; i += 1) {
+        if (board[x][i] != false || board[x][i] == null || anyBoatArround(x, i, board, ship)) {
+          return false;
+        }
+      }
+    } else if (direction == 'vertical') {
+      for (let i = x; i < ship.size + x; i += 1) {
+        if (board[i] == null) {
+          return false;
+        } else if (board[i][y] != false || anyBoatArround(i, y, board, ship)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  const addShip = (x, y, board, direction, ship) => {
+    if (direction == 'horizontal' && canPlace(x, y, board, direction, ship)) {
+      for (let i = y; i < ship.size + y; i += 1) {
+        board[x][i] = ship.name;
+      }
+    } else if (direction == 'vertical' && canPlace(x, y, board, direction, ship)) {
+      for (let i = x; i < ship.size + x; i += 1) {
+        board[i][y] = ship.name;
+      }
+    }
+  }
+
+  const attack = (shipName, ships) => {
+    const ship = ships.find(element => element.name == shipName);
+    ship.hit();
+  }
+
+  const receiveAttack = (x, y, board, ships) => {
+    if (typeof board[x][y] == 'string') {
+      attack(board[x][y], ships);
+      board[x][y] = 1;
+    } else if (typeof board[x][y] == 'boolean') {
+      board[x][y] = 0;
+    }
+  }
+
+  const allShipsSunk = (ships) => {
+    return ships.every(ship => ship.isSunk());
+  }
+
+  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull };
+}
+
+module.exports = GameBoard;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+const Player = (ships, gameBoard) => ({
+  ships,
+  board: gameBoard.createBoard(),
+  options: gameBoard.getOptions(),
+  getRandomPositions() {
+    const r1 = Math.floor(Math.random() * 10);
+    const r2 = Math.floor(Math.random() * 10);
+    let r3 = Math.floor(Math.random() * 2);
+    if (r3 === 0) {
+      r3 = "horizontal";
+    } else {
+      r3 = "vertical";
+    }
+
+    return [r1, r2, r3]
+  },
+  placeShips() {
+    let randoms;
+    let result;
+    let i = 0;
+    while (i < 5) {
+      randoms = this.getRandomPositions();
+      result = gameBoard.canPlace(randoms[0], randoms[1], this.board, randoms[2], ships[i]);
+      if (result) {
+        gameBoard.addShip(randoms[0], randoms[1], this.board, randoms[2], ships[i])
+        i += 1;
+      }
+    }
+    this.options = gameBoard.getOptions();
+  },
+  removeFromOption(arr) {
+    let i = 0;
+    while (i < this.options.length) {
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+        this.options.splice(i, 1);
+        i = 100;
+      }
+      i += 1;
+    }
+  },
+  makeMove(x, y, board, n, ships) {
+    if(this.options.length > 0) {
+      this.removeFromOption([x, y]);
+      gameBoard.receiveAttack(x, y, board, n, ships);
+    }
+  }
+});
+
+module.exports = Player;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+const Computer = (ships, gameBoard) => ({
+  ships,
+  board: gameBoard.createBoard(),
+  options: gameBoard.getOptions(),
+  smart: false,
+  getRandomPositions() {
+    const r1 = Math.floor(Math.random() * this.options.length);
+    let r2 = Math.floor(Math.random() * 2);
+    if (r2 === 0) {
+      r2 = "horizontal";
+    } else {
+      r2 = "vertical";
+    }
+
+    return [r1, r2]
+  },
+  removeFromOption(arr) {
+    let i = 0;
+    while (i < this.options.length) {
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+        this.options.splice(i, 1);
+        i = 100;
+      }
+      i += 1;
+    }
+  },
+  placeShips() {
+    let randoms;
+    let result;
+    let i = 0;
+    let hitOn;
+    while (i < 5) {
+      randoms = this.getRandomPositions();
+      hitOn = this.options[randoms[0]];
+      this.options.splice(randoms[0], 1)
+      result = gameBoard.canPlace(hitOn[0], hitOn[1], this.board, randoms[1], ships[i]);
+      if (result) {
+        gameBoard.addShip(hitOn[0], hitOn[1], this.board, randoms[1], ships[i])
+        i += 1;
+      }
+    }
+    this.options = gameBoard.getOptions();
+  },
+  makeMove(board, ships) {
+    if(this.options.length > 0) {
+      let randoms = this.getRandomPositions();
+      let hitOn = this.options[randoms[0]];
+      this.options.splice(randoms[0], 1);
+      const name = board[hitOn[0]][hitOn[1]];
+      gameBoard.receiveAttack(hitOn[0], hitOn[1], board, ships);
+      if (board[hitOn[0]][hitOn[1]] == 1) {
+        this.smart = true;
+        return [hitOn[0], hitOn[1], name];
+      } else {
+        return false;
+      }
+    }
+  },
+  whereToGo(x, y, board, first, not) {
+    let send;
+    let count;
+    if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
+      send = [x + 1, y];
+    } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
+      if(!not.includes(0)){
+        not.push(0);
+      }
+      send = [x - 1, y];
+    } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !not.includes(2)) {
+      for (let i = 0; i < 2; i += 1) {
+        if(!not.includes(i)){
+          not.push(i);
+        }
+      }
+      send = [x, y + 1];
+    } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number') {
+      for (let i = 0; i < 3; i += 1) {
+        if(!not.includes(i)){
+          not.push(i);
+        }
+      }
+      send = [x, y - 1];
+    } else {
+      not = [];
+      x = first[0];
+      y = first[1];
+      if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'integer') {
+        send = [x - 1, y];
+        not.push(0);
+      } else {
+        send = [x, y - 1];
+        for (let i = 1; i <= 3; i += 1) {
+          not.push(i);
+        }
+      }
+    }
+    return [send, not];
+  },
+  makeSmartMove(x, y, board, ships, first) {
+    if(this.options.length > 0) {
+      let send;
+      if (typeof board[x][y] === 'string') {
+        send = [x, y];
+      } else {
+        send = [first[0], first[1]];
+      }
+      this.removeFromOption([x, y]);
+      gameBoard.receiveAttack(x, y, board, ships);
+      const ship = ships.find(ship => ship.name == first[2]);
+      if (ship.isSunk()) {
+        this.smart = false;
+      }
+      return send;
+    }
+  }
+});
+
+module.exports = Computer;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var api = __webpack_require__(1);
-            var content = __webpack_require__(2);
+var api = __webpack_require__(4);
+            var content = __webpack_require__(5);
 
             content = content.__esModule ? content.default : content;
 
@@ -111,7 +404,7 @@ var exported = content.locals ? content.locals : {};
 module.exports = exported;
 
 /***/ }),
-/* 1 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -355,20 +648,20 @@ module.exports = function (moduleId, list, options) {
 };
 
 /***/ }),
-/* 2 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(6);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}", ""]);
+exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n.ship {\n  background: green;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
 
 /***/ }),
-/* 3 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -468,146 +761,33 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-const GameBoard = () => {
-  const createBoard = () => {
-    const board = Array(10).fill(false).map(x => Array(10).fill(false));
-    return board;
-  }
-
-  const canMove = (x, y, board) => {
-    if (typeof board[x, y] === 'integer') {
-      return false;
-    }
-    return true;
-  }
-
-  const getOptions = () => {
-    arr = [];
-    for (let i = 0; i < 10; i += 1) {
-      for (let j = 0; j < 10; j += 1) {
-        arr.push([i, j]);
-      }
-    }
-    return arr;
-  }
-
-  const checkNull = (x, y, board) => {
-    if (typeof board[x] === 'undefined') {
-      return true;
-    } else if (typeof board[x][y] === 'undefined') {
-      return true;
-    }
-    return false;
-  }
-
-  const anyBoatArround = (x, y, board, ship) => {
-    if (board[x][y] === 'string' && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x + 1, y + 1, board) && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x - 1, y - 1, board) && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x + 1, y - 1, board) && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    } else if (!checkNull(x - 1, y + 1, board) && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
-      return true;
-    }
-    return false;
-  }
-
-  const getShips = () => {
-    return [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
-  }
-
-  const canPlace = (x, y, board, direction, ship) => {
-    if (direction == 'horizontal') {
-      for (let i = y; i < ship.size + y; i += 1) {
-        if (board[x][i] != false || board[x][i] == null || anyBoatArround(x, i, board, ship)) {
-          return false;
-        }
-      }
-    } else if (direction == 'vertical') {
-      for (let i = x; i < ship.size + x; i += 1) {
-        if (board[i] == null) {
-          return false;
-        } else if (board[i][y] != false || anyBoatArround(i, y, board, ship)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  const addShip = (x, y, board, direction, ship) => {
-    if (direction == 'horizontal' && canPlace(x, y, board, direction, ship)) {
-      for (let i = y; i < ship.size + y; i += 1) {
-        board[x][i] = ship.name;
-      }
-    } else if (direction == 'vertical' && canPlace(x, y, board, direction, ship)) {
-      for (let i = x; i < ship.size + x; i += 1) {
-        board[i][y] = ship.name;
-      }
-    }
-  }
-
-  const attack = (shipName, ships) => {
-    const ship = ships.find(element => element.name == shipName);
-    ship.hit();
-  }
-
-  const receiveAttack = (x, y, board, ships) => {
-    if (typeof board[x][y] == 'string') {
-      attack(board[x][y], ships);
-      board[x][y] = 1;
-    } else if (typeof board[x][y] == 'boolean') {
-      board[x][y] = 0;
-    }
-  }
-
-  const allShipsSunk = (ships) => {
-    return ships.every(ship => ship.isSunk());
-  }
-
-  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull, getShips };
-}
-
-module.exports = GameBoard;
-
-
-/***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./src/style.css
-var style = __webpack_require__(0);
+var style = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./src/gameBoard.js
-var gameBoard = __webpack_require__(4);
-var gameBoard_default = /*#__PURE__*/__webpack_require__.n(gameBoard);
+var src_gameBoard = __webpack_require__(0);
+var gameBoard_default = /*#__PURE__*/__webpack_require__.n(src_gameBoard);
 
 // EXTERNAL MODULE: ./src/player.js
-var player = __webpack_require__(6);
+var player = __webpack_require__(1);
 var player_default = /*#__PURE__*/__webpack_require__.n(player);
 
 // EXTERNAL MODULE: ./src/computer.js
-var computer = __webpack_require__(7);
+var computer = __webpack_require__(2);
 var computer_default = /*#__PURE__*/__webpack_require__.n(computer);
 
+// EXTERNAL MODULE: ./src/ship.js
+var ship = __webpack_require__(8);
+var ship_default = /*#__PURE__*/__webpack_require__.n(ship);
+
 // CONCATENATED MODULE: ./src/gameLoop.js
+
 
 
 
@@ -616,7 +796,7 @@ let gameLoop_player, gameLoop_computer;
 
 const domManager = (() => {
 
-  const renderBoard = () => {
+  const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
     tableP.classList.add('player-board');
@@ -636,6 +816,12 @@ const domManager = (() => {
         tdC = document.createElement('td');
         tdP.id = `P-${i}-${j}`;
         tdC.id = `C-${i}-${j}`;
+        if (typeof player.board[i][j] === 'string') {
+          tdP.classList.add('ship');
+        }
+        if (typeof computer.board[i][j] === 'string') {
+          tdC.classList.add('ship');
+        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdP.addEventListener('click', () => {
@@ -653,203 +839,45 @@ const domManager = (() => {
 })();
 
 const gameLoop = () => {
-
-  const pBoard = gameBoard_default.a.createBoard();
-  const cBoard = gameBoard_default.a.createBoard();
-  const playerShips = gameBoard_default.a.getShips();
-  const computerShips = gameBoard_default.a.getShips();
-  gameLoop_player = player_default()(playerShips, pBoard);
-  gameLoop_computer = computer_default()(computerShips, cBoard);
+  const gameBoard = gameBoard_default()();
+  const ships = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
+  gameLoop_player = player_default()(ships, gameBoard);
+  gameLoop_computer = computer_default()(ships, gameBoard);
 
   gameLoop_player.placeShips();
   gameLoop_computer.placeShips();
+
+  domManager.renderBoard(gameLoop_player, gameLoop_computer);
 };
 
-/* harmony default export */ var src_gameLoop = (domManager);
+/* harmony default export */ var src_gameLoop = (gameLoop);
 
 // CONCATENATED MODULE: ./src/index.js
 
 
 
-src_gameLoop.renderBoard();
+src_gameLoop();
+
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
-const Player = (ships, gameBoard) => ({
-  ships,
-  board: gameBoard.createBoard(),
-  options: gameBoard.getOptions(),
-  getRandomPositions() {
-    const r1 = Math.floor(Math.random() * 10);
-    const r2 = Math.floor(Math.random() * 10);
-    let r3 = Math.floor(Math.random() * 2);
-    if (r3 === 0) {
-      r3 = "horizontal";
+const Ship = (size, name) => ({
+  size,
+  name,
+  life: size,
+  hit() { this.life -= 1 },
+  isSunk() {
+    if (this.life == 0) {
+      return true;
     } else {
-      r3 = "vertical";
-    }
-
-    return [r1, r2, r3]
-  },
-  placeShips() {
-    let randoms;
-    let result;
-    let i = 0;
-    while (i < 5) {
-      randoms = this.getRandomPositions();
-      result = gameBoard.canPlace(randoms[0], randoms[1], this.board, randoms[2], ships[i]);
-      if (result) {
-        gameBoard.addShip(randoms[0], randoms[1], this.board, randoms[2], ships[i])
-        i += 1;
-      }
-    }
-    this.options = gameBoard.getOptions();
-  },
-  removeFromOption(arr) {
-    let i = 0;
-    while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
-        this.options.splice(i, 1);
-        i = 100;
-      }
-      i += 1;
-    }
-  },
-  makeMove(x, y, board, n, ships) {
-    if(this.options.length > 0) {
-      this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, n, ships);
+      return false;
     }
   }
 });
 
-module.exports = Player;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-const Computer = (ships, gameBoard) => ({
-  ships,
-  board: gameBoard.createBoard(),
-  options: gameBoard.getOptions(),
-  smart: false,
-  getRandomPositions() {
-    const r1 = Math.floor(Math.random() * this.options.length);
-    let r2 = Math.floor(Math.random() * 2);
-    if (r2 === 0) {
-      r2 = "horizontal";
-    } else {
-      r2 = "vertical";
-    }
-
-    return [r1, r2]
-  },
-  removeFromOption(arr) {
-    let i = 0;
-    while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
-        this.options.splice(i, 1);
-        i = 100;
-      }
-      i += 1;
-    }
-  },
-  placeShips() {
-    let randoms;
-    let result;
-    let i = 0;
-    let hitOn;
-    while (i < 5) {
-      randoms = this.getRandomPositions();
-      hitOn = this.options[randoms[0]];
-      this.options.splice(randoms[0], 1)
-      result = gameBoard.canPlace(hitOn[0], hitOn[1], this.board, randoms[1], ships[i]);
-      if (result) {
-        gameBoard.addShip(hitOn[0], hitOn[1], this.board, randoms[1], ships[i])
-        i += 1;
-      }
-    }
-    this.options = gameBoard.getOptions();
-  },
-  makeMove(board, ships) {
-    if(this.options.length > 0) {
-      let randoms = this.getRandomPositions();
-      let hitOn = this.options[randoms[0]];
-      this.options.splice(randoms[0], 1);
-      const name = board[hitOn[0]][hitOn[1]];
-      gameBoard.receiveAttack(hitOn[0], hitOn[1], board, ships);
-      if (board[hitOn[0]][hitOn[1]] == 1) {
-        this.smart = true;
-        return [hitOn[0], hitOn[1], name];
-      } else {
-        return false;
-      }
-    }
-  },
-  whereToGo(x, y, board, first, not) {
-    let send;
-    let count;
-    if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
-      send = [x + 1, y];
-    } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
-      if(!not.includes(0)){
-        not.push(0);
-      }
-      send = [x - 1, y];
-    } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !not.includes(2)) {
-      for (let i = 0; i < 2; i += 1) {
-        if(!not.includes(i)){
-          not.push(i);
-        }
-      }
-      send = [x, y + 1];
-    } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number') {
-      for (let i = 0; i < 3; i += 1) {
-        if(!not.includes(i)){
-          not.push(i);
-        }
-      }
-      send = [x, y - 1];
-    } else {
-      not = [];
-      x = first[0];
-      y = first[1];
-      if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'integer') {
-        send = [x - 1, y];
-        not.push(0);
-      } else {
-        send = [x, y - 1];
-        for (let i = 1; i <= 3; i += 1) {
-          not.push(i);
-        }
-      }
-    }
-    return [send, not];
-  },
-  makeSmartMove(x, y, board, ships, first) {
-    if(this.options.length > 0) {
-      let send;
-      if (typeof board[x][y] === 'string') {
-        send = [x, y];
-      } else {
-        send = [first[0], first[1]];
-      }
-      this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, ships);
-      const ship = ships.find(ship => ship.name == first[2]);
-      if (ship.isSunk()) {
-        this.smart = false;
-      }
-      return send;
-    }
-  }
-});
-
-module.exports = Computer;
+module.exports = Ship;
 
 
 /***/ })

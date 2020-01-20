@@ -19,3 +19,7 @@ td {
 td:hover {
   background-color: gray;
 }
+
+.ship {
+  background: green;
+}

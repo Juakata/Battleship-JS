@@ -1,12 +1,13 @@
 import GameBoard from './gameBoard';
 import Player from './player';
 import Computer from './computer'
+import Ship from './ship'
 
 let player, computer;
 
 const domManager = (() => {
 
-  const renderBoard = () => {
+  const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
     tableP.classList.add('player-board');
@@ -26,6 +27,12 @@ const domManager = (() => {
         tdC = document.createElement('td');
         tdP.id = `P-${i}-${j}`;
         tdC.id = `C-${i}-${j}`;
+        if (typeof player.board[i][j] === 'string') {
+          tdP.classList.add('ship');
+        }
+        if (typeof computer.board[i][j] === 'string') {
+          tdC.classList.add('ship');
+        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdP.addEventListener('click', () => {
@@ -43,16 +50,15 @@ const domManager = (() => {
 })();
 
 const gameLoop = () => {
-
-  const pBoard = GameBoard.createBoard();
-  const cBoard = GameBoard.createBoard();
-  const playerShips = GameBoard.getShips();
-  const computerShips = GameBoard.getShips();
-  player = Player(playerShips, pBoard);
-  computer = Computer(computerShips, cBoard);
+  const gameBoard = GameBoard();
+  const ships = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
+  player = Player(ships, gameBoard);
+  computer = Computer(ships, gameBoard);
 
   player.placeShips();
   computer.placeShips();
+
+  domManager.renderBoard(player, computer);
 };
 
-export default domManager;
+export default gameLoop;
