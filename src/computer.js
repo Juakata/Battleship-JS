@@ -52,7 +52,7 @@ const Computer = (ships, gameBoard) => ({
         this.smart = true;
         return [hitOn[0], hitOn[1], name];
       } else {
-        return false;
+        return [hitOn[0], hitOn[1]];
       }
     }
   },

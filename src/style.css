@@ -26,8 +26,13 @@ td:hover {
 
 .hit {
   background: red;
+
+}
+.disable-event {
+  pointer-events: none;
 }
 
 .water {
   background: aqua;
+
 }
