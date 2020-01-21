@@ -23,3 +23,11 @@ td:hover {
 .ship {
   background: green;
 }
+
+.hit {
+  background: red;
+}
+
+.water {
+  background: aqua;
+}

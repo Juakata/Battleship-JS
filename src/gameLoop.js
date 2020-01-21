@@ -8,6 +8,10 @@ let player, computer;
 const domManager = (() => {
 
   const renderBoard = (player, computer) => {
+    let first = undefined;
+    let not = undefined;
+    let go = undefined;
+    let move = undefined;
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
     tableP.classList.add('player-board');
@@ -30,16 +34,33 @@ const domManager = (() => {
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
         }
-        if (typeof computer.board[i][j] === 'string') {
-          tdC.classList.add('ship');
-        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdP.addEventListener('click', () => {
           alert(`You clicked ${event.target.id}`);
         }, false);
         tdC.addEventListener('click', () => {
-          alert(`You clicked ${event.target.id}`);
+          const coord = event.target.id.split('-');
+          if (typeof computer.board[coord[1]][coord[2]] === 'string') {
+            event.target.className = 'hit';
+            console.log(computer.board);
+          } else {
+            event.target.className = 'water';
+          }
+          player.makeMove(coord[1], coord[2], computer.board, computer.ships);
+          event.target.style.pointerEvents = 'none';
+          if (computer.smart) {
+            if (first === undefined) {
+              first = [compMove[0], compMove[1], compMove[2]];
+              not = [];
+              go = computer.whereToGo(compMove[0], compMove[1], player.board, first, not);
+            } else {
+              go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+            }
+            move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
+          } else {
+            const compMove = computer.makeMove();
+          }
         }, false);
       }
     }

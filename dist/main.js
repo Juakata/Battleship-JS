@@ -81,11 +81,32 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+const Ship = (size, name) => ({
+  size,
+  name,
+  life: size,
+  hit() { this.life -= 1 },
+  isSunk() {
+    if (this.life == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
+
+module.exports = Ship;
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 const GameBoard = () => {
@@ -199,7 +220,7 @@ module.exports = GameBoard;
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports) {
 
 const Player = (ships, gameBoard) => ({
@@ -235,17 +256,17 @@ const Player = (ships, gameBoard) => ({
   removeFromOption(arr) {
     let i = 0;
     while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]) {
         this.options.splice(i, 1);
         i = 100;
       }
       i += 1;
     }
   },
-  makeMove(x, y, board, n, ships) {
-    if(this.options.length > 0) {
+  makeMove(x, y, board, ships) {
+    if (this.options.length > 0) {
       this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, n, ships);
+      gameBoard.receiveAttack(x, y, board, ships);
     }
   }
 });
@@ -254,7 +275,7 @@ module.exports = Player;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 const Computer = (ships, gameBoard) => ({
@@ -276,7 +297,7 @@ const Computer = (ships, gameBoard) => ({
   removeFromOption(arr) {
     let i = 0;
     while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]) {
         this.options.splice(i, 1);
         i = 100;
       }
@@ -301,7 +322,7 @@ const Computer = (ships, gameBoard) => ({
     this.options = gameBoard.getOptions();
   },
   makeMove(board, ships) {
-    if(this.options.length > 0) {
+    if (this.options.length > 0) {
       let randoms = this.getRandomPositions();
       let hitOn = this.options[randoms[0]];
       this.options.splice(randoms[0], 1);
@@ -321,20 +342,20 @@ const Computer = (ships, gameBoard) => ({
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
       send = [x + 1, y];
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
-      if(!not.includes(0)){
+      if (!not.includes(0)) {
         not.push(0);
       }
       send = [x - 1, y];
     } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !not.includes(2)) {
       for (let i = 0; i < 2; i += 1) {
-        if(!not.includes(i)){
+        if (!not.includes(i)) {
           not.push(i);
         }
       }
       send = [x, y + 1];
     } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number') {
       for (let i = 0; i < 3; i += 1) {
-        if(!not.includes(i)){
+        if (!not.includes(i)) {
           not.push(i);
         }
       }
@@ -356,7 +377,7 @@ const Computer = (ships, gameBoard) => ({
     return [send, not];
   },
   makeSmartMove(x, y, board, ships, first) {
-    if(this.options.length > 0) {
+    if (this.options.length > 0) {
       let send;
       if (typeof board[x][y] === 'string') {
         send = [x, y];
@@ -378,11 +399,11 @@ module.exports = Computer;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var api = __webpack_require__(4);
-            var content = __webpack_require__(5);
+var api = __webpack_require__(5);
+            var content = __webpack_require__(6);
 
             content = content.__esModule ? content.default : content;
 
@@ -404,7 +425,7 @@ var exported = content.locals ? content.locals : {};
 module.exports = exported;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -648,20 +669,20 @@ module.exports = function (moduleId, list, options) {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(6);
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(7);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n.ship {\n  background: green;\n}\n", ""]);
+exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n}\n\n.water {\n  background: aqua;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -761,29 +782,29 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./src/style.css
-var style = __webpack_require__(3);
+var style = __webpack_require__(4);
 
 // EXTERNAL MODULE: ./src/gameBoard.js
-var src_gameBoard = __webpack_require__(0);
+var src_gameBoard = __webpack_require__(1);
 var gameBoard_default = /*#__PURE__*/__webpack_require__.n(src_gameBoard);
 
 // EXTERNAL MODULE: ./src/player.js
-var player = __webpack_require__(1);
+var player = __webpack_require__(2);
 var player_default = /*#__PURE__*/__webpack_require__.n(player);
 
 // EXTERNAL MODULE: ./src/computer.js
-var computer = __webpack_require__(2);
+var computer = __webpack_require__(3);
 var computer_default = /*#__PURE__*/__webpack_require__.n(computer);
 
 // EXTERNAL MODULE: ./src/ship.js
-var ship = __webpack_require__(8);
+var ship = __webpack_require__(0);
 var ship_default = /*#__PURE__*/__webpack_require__.n(ship);
 
 // CONCATENATED MODULE: ./src/gameLoop.js
@@ -797,6 +818,10 @@ let gameLoop_player, gameLoop_computer;
 const domManager = (() => {
 
   const renderBoard = (player, computer) => {
+    let first = undefined;
+    let not = undefined;
+    let go = undefined;
+    let move = undefined;
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
     tableP.classList.add('player-board');
@@ -819,16 +844,33 @@ const domManager = (() => {
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
         }
-        if (typeof computer.board[i][j] === 'string') {
-          tdC.classList.add('ship');
-        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdP.addEventListener('click', () => {
           alert(`You clicked ${event.target.id}`);
         }, false);
         tdC.addEventListener('click', () => {
-          alert(`You clicked ${event.target.id}`);
+          const coord = event.target.id.split('-');
+          if (typeof computer.board[coord[1]][coord[2]] === 'string') {
+            event.target.className = 'hit';
+            console.log(computer.board);
+          } else {
+            event.target.className = 'water';
+          }
+          player.makeMove(coord[1], coord[2], computer.board, computer.ships);
+          event.target.style.pointerEvents = 'none';
+          if (computer.smart) {
+            if (first === undefined) {
+              first = [compMove[0], compMove[1], compMove[2]];
+              not = [];
+              go = computer.whereToGo(compMove[0], compMove[1], player.board, first, not);
+            } else {
+              go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+            }
+            move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
+          } else {
+            const compMove = computer.makeMove();
+          }
         }, false);
       }
     }
@@ -857,27 +899,6 @@ const gameLoop = () => {
 
 
 src_gameLoop();
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-const Ship = (size, name) => ({
-  size,
-  name,
-  life: size,
-  hit() { this.life -= 1 },
-  isSunk() {
-    if (this.life == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-});
-
-module.exports = Ship;
 
 
 /***/ })

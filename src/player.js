@@ -31,17 +31,17 @@ const Player = (ships, gameBoard) => ({
   removeFromOption(arr) {
     let i = 0;
     while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]) {
         this.options.splice(i, 1);
         i = 100;
       }
       i += 1;
     }
   },
-  makeMove(x, y, board, n, ships) {
-    if(this.options.length > 0) {
+  makeMove(x, y, board, ships) {
+    if (this.options.length > 0) {
       this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, n, ships);
+      gameBoard.receiveAttack(x, y, board, ships);
     }
   }
 });

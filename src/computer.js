@@ -17,7 +17,7 @@ const Computer = (ships, gameBoard) => ({
   removeFromOption(arr) {
     let i = 0;
     while (i < this.options.length) {
-      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]){
+      if (arr[0] === this.options[i][0] && arr[1] === this.options[i][1]) {
         this.options.splice(i, 1);
         i = 100;
       }
@@ -42,7 +42,7 @@ const Computer = (ships, gameBoard) => ({
     this.options = gameBoard.getOptions();
   },
   makeMove(board, ships) {
-    if(this.options.length > 0) {
+    if (this.options.length > 0) {
       let randoms = this.getRandomPositions();
       let hitOn = this.options[randoms[0]];
       this.options.splice(randoms[0], 1);
@@ -62,20 +62,20 @@ const Computer = (ships, gameBoard) => ({
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
       send = [x + 1, y];
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
-      if(!not.includes(0)){
+      if (!not.includes(0)) {
         not.push(0);
       }
       send = [x - 1, y];
     } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !not.includes(2)) {
       for (let i = 0; i < 2; i += 1) {
-        if(!not.includes(i)){
+        if (!not.includes(i)) {
           not.push(i);
         }
       }
       send = [x, y + 1];
     } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number') {
       for (let i = 0; i < 3; i += 1) {
-        if(!not.includes(i)){
+        if (!not.includes(i)) {
           not.push(i);
         }
       }
@@ -97,7 +97,7 @@ const Computer = (ships, gameBoard) => ({
     return [send, not];
   },
   makeSmartMove(x, y, board, ships, first) {
-    if(this.options.length > 0) {
+    if (this.options.length > 0) {
       let send;
       if (typeof board[x][y] === 'string') {
         send = [x, y];
