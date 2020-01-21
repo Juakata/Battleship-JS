@@ -58,7 +58,6 @@ const Computer = (ships, gameBoard) => ({
   },
   whereToGo(x, y, board, first, not) {
     let send;
-    let count;
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
       send = [x + 1, y];
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {

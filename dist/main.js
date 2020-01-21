@@ -197,7 +197,9 @@ const GameBoard = () => {
 
   const attack = (shipName, ships) => {
     const ship = ships.find(element => element.name == shipName);
-    ship.hit();
+    if (!ship.isSunk()) {
+      ship.hit();
+    }
   }
 
   const receiveAttack = (x, y, board, ships) => {
@@ -338,7 +340,6 @@ const Computer = (ships, gameBoard) => ({
   },
   whereToGo(x, y, board, first, not) {
     let send;
-    let count;
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
       send = [x + 1, y];
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
@@ -876,21 +877,26 @@ const domManager = (() => {
             event.target.className = 'water disable-event';
           }
           player.makeMove(coord[1], coord[2], computer.board, computer.ships);
-          if (!computer.smart) {
-            const compMove = computer.makeMove(player.board, player.ships);
-            const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
-            console.log(player.board[compMove[0]][compMove[1]]);
-            if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
-              shot.className = 'hit disable-event';
+          if (computer.board[coord[1]][coord[2]] !== 1) {
+            if (!computer.smart) {
+              const compMove = computer.makeMove(player.board, player.ships);
+              const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
+              if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
+                shot.className = 'hit disable-event';
+              } else {
+                shot.className = 'water disable-event';
+              }
+              if (computer.smart) {
+                computerAction(player, compMove, [], []);
+              }
             } else {
-              shot.className = 'water disable-event';
+              computerAction(player, smart[0], smart[1], smart[2]);
             }
-            if (computer.smart) {
-              computerAction(player, compMove, [], []);
-            }
-          } else {
-            computerAction(player, smart[0], smart[1], smart[2]);
           }
+          console.log('computer: ');
+          console.log(computer.ships);
+          console.log('player: ');
+          console.log(player.ships);
         }, false);
       }
     }
@@ -902,9 +908,10 @@ const domManager = (() => {
 
 const gameLoop = () => {
   const gameBoard = gameBoard_default()();
-  const ships = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
-  gameLoop_player = player_default()(ships, gameBoard);
-  gameLoop_computer = computer_default()(ships, gameBoard);
+  const shipsPlayer = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
+  const shipsComputer = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
+  gameLoop_player = player_default()(shipsPlayer, gameBoard);
+  gameLoop_computer = computer_default()(shipsComputer, gameBoard);
 
   gameLoop_player.placeShips();
   gameLoop_computer.placeShips();

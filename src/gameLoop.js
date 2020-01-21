@@ -66,21 +66,26 @@ const domManager = (() => {
             event.target.className = 'water disable-event';
           }
           player.makeMove(coord[1], coord[2], computer.board, computer.ships);
-          if (!computer.smart) {
-            const compMove = computer.makeMove(player.board, player.ships);
-            const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
-            console.log(player.board[compMove[0]][compMove[1]]);
-            if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
-              shot.className = 'hit disable-event';
+          if (computer.board[coord[1]][coord[2]] !== 1) {
+            if (!computer.smart) {
+              const compMove = computer.makeMove(player.board, player.ships);
+              const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
+              if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
+                shot.className = 'hit disable-event';
+              } else {
+                shot.className = 'water disable-event';
+              }
+              if (computer.smart) {
+                computerAction(player, compMove, [], []);
+              }
             } else {
-              shot.className = 'water disable-event';
+              computerAction(player, smart[0], smart[1], smart[2]);
             }
-            if (computer.smart) {
-              computerAction(player, compMove, [], []);
-            }
-          } else {
-            computerAction(player, smart[0], smart[1], smart[2]);
           }
+          console.log('computer: ');
+          console.log(computer.ships);
+          console.log('player: ');
+          console.log(player.ships);
         }, false);
       }
     }
@@ -92,9 +97,10 @@ const domManager = (() => {
 
 const gameLoop = () => {
   const gameBoard = GameBoard();
-  const ships = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
-  player = Player(ships, gameBoard);
-  computer = Computer(ships, gameBoard);
+  const shipsPlayer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
+  const shipsComputer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
+  player = Player(shipsPlayer, gameBoard);
+  computer = Computer(shipsComputer, gameBoard);
 
   player.placeShips();
   computer.placeShips();

@@ -46,7 +46,7 @@ describe('Player tests', () => {
       computer.makeMove(player.board, ships);
     }
     player.board.forEach(e => {
-      if(e.includes(false)) {
+      if (e.includes(false)) {
         result += 1;
       }
     })
@@ -104,4 +104,8 @@ describe('Player tests', () => {
     });
     expect(count).toBe(0);
   });
+
+  // test('computer should destroy ship at the border', () => {
+  //   gameBoard.addShip(6, 9, player.board, 'vertical', ships[0]);
+  // });
 })
