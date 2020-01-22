@@ -24,6 +24,42 @@ const Computer = (ships, gameBoard) => ({
       i += 1;
     }
   },
+  makeAttacks(ship, board) {
+    ship.forEach(e => {
+      if (!gameBoard.checkNull(e[0] + 1, e[1], board) && typeof board[e[0] + 1][e[1]] !== 'number') {
+        board[e[0] + 1][e[1]] = 0;
+        document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0] - 1, e[1], board) && typeof board[e[0] - 1][e[1]] !== 'number') {
+        board[e[0] - 1][e[1]] = 0;
+        document.getElementById(`P-${e[0] - 1}-${e[1]}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0], e[1] + 1, board) && typeof board[e[0]][e[1] + 1] !== 'number') {
+        board[e[0]][e[1] + 1] = 0;
+        document.getElementById(`P-${e[0]}-${e[1] + 1}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0], e[1] - 1, board) && typeof board[e[0]][e[1] - 1] !== 'number') {
+        board[e[0]][e[1] - 1] = 0;
+        document.getElementById(`P-${e[0]}-${e[1] - 1}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0] + 1, e[1] + 1, board) && typeof board[e[0] + 1][e[1] + 1] !== 'number') {
+        board[e[0] + 1][e[1] + 1] = 0;
+        document.getElementById(`P-${e[0] + 1}-${e[1] + 1}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0] - 1, e[1] - 1, board) && typeof board[e[0] - 1][e[1] - 1] !== 'number') {
+        board[e[0] - 1][e[1] - 1] = 0;
+        document.getElementById(`P-${e[0] - 1}-${e[1] - 1}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0] + 1, e[1] - 1, board) && typeof board[e[0] + 1][e[1] - 1] !== 'number') {
+        board[e[0] + 1][e[1] - 1] = 0;
+        document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
+      }
+      if (!gameBoard.checkNull(e[0] - 1 , e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
+        board[e[0] - 1][e[1] + 1] = 0;
+        document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
+      }
+    });
+  },
   placeShips() {
     let randoms;
     let result;

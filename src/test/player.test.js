@@ -51,4 +51,10 @@ describe('Player tests', () => {
     expect(result).toBe(0);
     expect(player.options.length).toBe(0);
   });
+
+  test('Should remove a option', () => {
+    expect(player.options.length).toBe(100);
+    player.makeMove(2, 2, computer.board, ships);
+    expect(player.options.length).toBe(99);
+  });
 })

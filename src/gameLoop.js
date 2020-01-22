@@ -3,29 +3,80 @@ import Player from './player';
 import Computer from './computer'
 import Ship from './ship'
 
-let player, computer;
+let player, computer, shipSaved;
 
 const domManager = (() => {
   let smart = [];
 
+  const shipFound = (player, e) => {
+    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1]] === 'false') {
+      player.board[e[0] + 1][e[1]] = 0;
+      document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
+    }
+    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1]] === 'false') {
+      player.board[e[0] - 1][e[1]] = 0;
+      document.getElementById(`P-${e[0] - 1}-${e[1]}`).className = 'water';
+    }
+    if (typeof player.board[e[0]][e[1] + 1] === 'false') {
+      player.board[e[0]][e[1] + 1] = 0;
+      document.getElementById(`P-${e[0]}-${e[1] + 1}`).className = 'water';
+    }
+    if (typeof player.board[e[0]][e[1] - 1] === 'false') {
+      player.board[e[0]][e[1] - 1] = 0;
+      document.getElementById(`P-${e[0]}-${e[1] - 1}`).className = 'water';
+    }
+    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1] + 1] === 'false') {
+      player.board[e[0] + 1][e[1] + 1] = 0;
+      document.getElementById(`P-${e[0] + 1}-${e[1] + 1}`).className = 'water';
+    }
+    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1] - 1] === 'boolean') {
+      player.board[e[0] - 1][e[1] - 1] = 0;
+      document.getElementById(`P-${e[0] - 1}-${e[1] - 1}`).className = 'water';
+    }
+    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1] - 1] === 'boolean') {
+      player.board[e[0] + 1][e[1] - 1] = 0;
+      document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
+    }
+    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1] + 1] === 'boolean') {
+      player.board[e[0] - 1][e[1] + 1] = 0;
+      document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
+    }
+  }
+
   const computerAction = (player, compMove, move, go) => {
     let first = [compMove[0], compMove[1], compMove[2]];
+    let shot;
     if (go.length === 0) {
       go = computer.whereToGo(compMove[0], compMove[1], player.board, first, []);
     } else {
       go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
     }
-    const shot = document.getElementById(`P-${go[0][0]}-${go[0][1]}`);
-    console.log(player.board[go[0][0]][go[0][1]]);
+    shot = document.getElementById(`P-${go[0][0]}-${go[0][1]}`);
     if (typeof player.board[go[0][0]][go[0][1]] === 'string') {
-      shot.className = 'hit';
+      shot.className = 'hit disable-event';
     } else {
       shot.className = 'water';
     }
-    const ship = player.ships.find(ship => ship.name == first[2]);
+
     move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
-    if (shot.className === 'hit' && computer.smart) {
+    if(!computer.smart){
+      shipSaved.push([move[0], move[1]]);
+      computer.makeAttacks(shipSaved, player.board);
+      compMove = computer.makeMove(player.board, player.ships);
+      shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
+      if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
+        shot.className = 'hit disable-event';
+      } else {
+        shot.className = 'water disable-event';
+      }
+      shipSaved = [];
+      move = [];
+      go = [];
+    }
+
+    if (shot.className === 'hit disable-event' && computer.smart) {
+      shipSaved.push([move[0], move[1]]);
       computerAction(player, compMove, move, go);
     }
   }
@@ -69,6 +120,7 @@ const domManager = (() => {
           } else {
             event.target.className = 'water disable-event';
           }
+          const name = computer.board[coord[1]][coord[2]];
           player.makeMove(coord[1], coord[2], computer.board, computer.ships);
           if (computer.board[coord[1]][coord[2]] !== 1) {
             if (!computer.smart) {
@@ -80,15 +132,24 @@ const domManager = (() => {
                 shot.className = 'water disable-event';
               }
               if (computer.smart) {
+                shipSaved = [];
+                shipSaved.push([compMove[0], compMove[1]]);
                 computerAction(player, compMove, [], []);
               }
             } else {
               computerAction(player, smart[0], smart[1], smart[2]);
             }
+          } else {
+            const ship = computer.ships.find(ship => ship.name == name);
+            if (ship.isSunk()) {
+              player.makeAttacks(ship, computer);
+            }
           }
+          console.log(player.options.length);
         }, false);
       }
     }
+    console.log(player.options.length);
   }
 
   return { renderBoard };
@@ -104,7 +165,6 @@ const gameLoop = () => {
 
   player.placeShips();
   computer.placeShips();
-
   domManager.renderBoard(player, computer);
 };
 

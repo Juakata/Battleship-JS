@@ -75,10 +75,18 @@ const GameBoard = () => {
   const addShip = (x, y, board, direction, ship) => {
     if (direction == 'horizontal' && canPlace(x, y, board, direction, ship)) {
       for (let i = y; i < ship.size + y; i += 1) {
+        if (i === y) {
+          ship.first = [x, y];
+          ship.orientation = 'h';
+        }
         board[x][i] = ship.name;
       }
     } else if (direction == 'vertical' && canPlace(x, y, board, direction, ship)) {
       for (let i = x; i < ship.size + x; i += 1) {
+        if (i === x) {
+          ship.first = [x, y];
+          ship.orientation = 'v';
+        }
         board[i][y] = ship.name;
       }
     }

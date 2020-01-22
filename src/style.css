@@ -34,5 +34,5 @@ td:hover {
 
 .water {
   background: aqua;
-
+  pointer-events: none;
 }
