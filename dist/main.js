@@ -370,7 +370,7 @@ const Computer = (ships, gameBoard) => ({
         not.push(0);
       } else {
         send = [x, y - 1];
-        for (let i = 1; i <= 3; i += 1) {
+        for (let i = 0; i < 3; i += 1) {
           not.push(i);
         }
       }
@@ -827,15 +827,16 @@ const domManager = (() => {
       go = gameLoop_computer.whereToGo(move[0], move[1], player.board, first, go[1]);
     }
     const shot = document.getElementById(`P-${go[0][0]}-${go[0][1]}`);
+    console.log(player.board[go[0][0]][go[0][1]]);
     if (typeof player.board[go[0][0]][go[0][1]] === 'string') {
       shot.className = 'hit';
     } else {
       shot.className = 'water';
     }
+    const ship = player.ships.find(ship => ship.name == first[2]);
     move = gameLoop_computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
-    console.log(player.ships);
     smart = [compMove, move, go];
-    if (shot.className === 'hit') {
+    if (shot.className === 'hit' && gameLoop_computer.smart) {
       computerAction(player, compMove, move, go);
     }
   }
@@ -863,6 +864,9 @@ const domManager = (() => {
         tdC.id = `C-${i}-${j}`;
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
+        }
+        if (typeof computer.board[i][j] === 'string') {
+          tdC.classList.add('ship');
         }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
@@ -893,10 +897,6 @@ const domManager = (() => {
               computerAction(player, smart[0], smart[1], smart[2]);
             }
           }
-          console.log('computer: ');
-          console.log(computer.ships);
-          console.log('player: ');
-          console.log(player.ships);
         }, false);
       }
     }

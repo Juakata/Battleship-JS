@@ -105,7 +105,53 @@ describe('Player tests', () => {
     expect(count).toBe(0);
   });
 
-  // test('computer should destroy ship at the border', () => {
-  //   gameBoard.addShip(6, 9, player.board, 'vertical', ships[0]);
-  // });
+  test('Computer should destroy the ship horizontal at top and starting from the mid', () => {
+    gameBoard.addShip(0, 5, player.board, 'horizontal', ships[0]);
+    const not = [];
+    const hit = computer.makeSmartMove(0, 7, player.board, ships, [0, 7, 'A']);
+    let first = [0, 7, 'A'];
+    go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
+    let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([1, 7]);
+    expect(move).toMatchObject([0, 7]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([0, 8]);
+    expect(move).toMatchObject([0, 8]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([0, 9]);
+    expect(move).toMatchObject([0, 9]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([0, 6]);
+    expect(move).toMatchObject([0, 6]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([0, 5]);
+    expect(move).toMatchObject([0, 5]);
+  });
+
+  test('Computer should destroy the ship vertical at left and starting from the mid', () => {
+    gameBoard.addShip(2, 0, player.board, 'vertical', ships[1]);
+    const not = [];
+    const hit = computer.makeSmartMove(3, 0, player.board, ships, [3, 0, 'B']);
+    let first = [3, 0, 'B'];
+    go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
+    let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([4, 0]);
+    expect(move).toMatchObject([4, 0]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([5, 0]);
+    expect(move).toMatchObject([5, 0]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([6, 0]);
+    expect(move).toMatchObject([3, 0]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([2, 0]);
+    expect(move).toMatchObject([2, 0]);
+  });
 })
