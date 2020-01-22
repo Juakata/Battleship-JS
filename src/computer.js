@@ -24,38 +24,51 @@ const Computer = (ships, gameBoard) => ({
       i += 1;
     }
   },
-  makeAttacks(ship, board) {
-    ship.forEach(e => {
+  makeAttacks(ship, player) {
+    const board = player.board;
+    const ships = player.ships;
+    const elements = [];
+    const first = [0, 0, 'A'];
+    if(ship.orientation === 'v'){
+      for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
+        elements.push([i, ship.first[1]]);
+      }
+    } else {
+      for (let i = ship.first[1]; i < ship.size + ship.first[1]; i += 1) {
+        elements.push([ship.first[0], i]);
+      }
+    }
+    elements.forEach(e => {
       if (!gameBoard.checkNull(e[0] + 1, e[1], board) && typeof board[e[0] + 1][e[1]] !== 'number') {
-        board[e[0] + 1][e[1]] = 0;
+        this.makeSmartMove(e[0] + 1, e[1], board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1, e[1], board) && typeof board[e[0] - 1][e[1]] !== 'number') {
-        board[e[0] - 1][e[1]] = 0;
+        this.makeSmartMove(e[0] - 1, e[1], board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1]}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0], e[1] + 1, board) && typeof board[e[0]][e[1] + 1] !== 'number') {
-        board[e[0]][e[1] + 1] = 0;
+        this.makeSmartMove(e[0], e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0]}-${e[1] + 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0], e[1] - 1, board) && typeof board[e[0]][e[1] - 1] !== 'number') {
-        board[e[0]][e[1] - 1] = 0;
+        this.makeSmartMove(e[0], e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0]}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] + 1, e[1] + 1, board) && typeof board[e[0] + 1][e[1] + 1] !== 'number') {
-        board[e[0] + 1][e[1] + 1] = 0;
+        this.makeSmartMove(e[0] + 1, e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1] + 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1, e[1] - 1, board) && typeof board[e[0] - 1][e[1] - 1] !== 'number') {
-        board[e[0] - 1][e[1] - 1] = 0;
+        this.makeSmartMove(e[0] - 1, e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] + 1, e[1] - 1, board) && typeof board[e[0] + 1][e[1] - 1] !== 'number') {
-        board[e[0] + 1][e[1] - 1] = 0;
+        this.makeSmartMove(e[0] + 1, e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1 , e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
-        board[e[0] - 1][e[1] + 1] = 0;
+        this.makeSmartMove(e[0] - 1, e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
     });

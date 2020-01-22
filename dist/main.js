@@ -364,38 +364,51 @@ const Computer = (ships, gameBoard) => ({
       i += 1;
     }
   },
-  makeAttacks(ship, board) {
-    ship.forEach(e => {
+  makeAttacks(ship, player) {
+    const board = player.board;
+    const ships = player.ships;
+    const elements = [];
+    const first = [0, 0, 'A'];
+    if(ship.orientation === 'v'){
+      for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
+        elements.push([i, ship.first[1]]);
+      }
+    } else {
+      for (let i = ship.first[1]; i < ship.size + ship.first[1]; i += 1) {
+        elements.push([ship.first[0], i]);
+      }
+    }
+    elements.forEach(e => {
       if (!gameBoard.checkNull(e[0] + 1, e[1], board) && typeof board[e[0] + 1][e[1]] !== 'number') {
-        board[e[0] + 1][e[1]] = 0;
+        this.makeSmartMove(e[0] + 1, e[1], board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1, e[1], board) && typeof board[e[0] - 1][e[1]] !== 'number') {
-        board[e[0] - 1][e[1]] = 0;
+        this.makeSmartMove(e[0] - 1, e[1], board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1]}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0], e[1] + 1, board) && typeof board[e[0]][e[1] + 1] !== 'number') {
-        board[e[0]][e[1] + 1] = 0;
+        this.makeSmartMove(e[0], e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0]}-${e[1] + 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0], e[1] - 1, board) && typeof board[e[0]][e[1] - 1] !== 'number') {
-        board[e[0]][e[1] - 1] = 0;
+        this.makeSmartMove(e[0], e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0]}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] + 1, e[1] + 1, board) && typeof board[e[0] + 1][e[1] + 1] !== 'number') {
-        board[e[0] + 1][e[1] + 1] = 0;
+        this.makeSmartMove(e[0] + 1, e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1] + 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1, e[1] - 1, board) && typeof board[e[0] - 1][e[1] - 1] !== 'number') {
-        board[e[0] - 1][e[1] - 1] = 0;
+        this.makeSmartMove(e[0] - 1, e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] + 1, e[1] - 1, board) && typeof board[e[0] + 1][e[1] - 1] !== 'number') {
-        board[e[0] + 1][e[1] - 1] = 0;
+        this.makeSmartMove(e[0] + 1, e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
       }
       if (!gameBoard.checkNull(e[0] - 1 , e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
-        board[e[0] - 1][e[1] + 1] = 0;
+        this.makeSmartMove(e[0] - 1, e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
     });
@@ -908,45 +921,10 @@ var ship_default = /*#__PURE__*/__webpack_require__.n(ship);
 
 
 
-let gameLoop_player, gameLoop_computer, shipSaved;
+let gameLoop_player, gameLoop_computer;
 
 const domManager = (() => {
   let smart = [];
-
-  const shipFound = (player, e) => {
-    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1]] === 'false') {
-      player.board[e[0] + 1][e[1]] = 0;
-      document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
-    }
-    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1]] === 'false') {
-      player.board[e[0] - 1][e[1]] = 0;
-      document.getElementById(`P-${e[0] - 1}-${e[1]}`).className = 'water';
-    }
-    if (typeof player.board[e[0]][e[1] + 1] === 'false') {
-      player.board[e[0]][e[1] + 1] = 0;
-      document.getElementById(`P-${e[0]}-${e[1] + 1}`).className = 'water';
-    }
-    if (typeof player.board[e[0]][e[1] - 1] === 'false') {
-      player.board[e[0]][e[1] - 1] = 0;
-      document.getElementById(`P-${e[0]}-${e[1] - 1}`).className = 'water';
-    }
-    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1] + 1] === 'false') {
-      player.board[e[0] + 1][e[1] + 1] = 0;
-      document.getElementById(`P-${e[0] + 1}-${e[1] + 1}`).className = 'water';
-    }
-    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1] - 1] === 'boolean') {
-      player.board[e[0] - 1][e[1] - 1] = 0;
-      document.getElementById(`P-${e[0] - 1}-${e[1] - 1}`).className = 'water';
-    }
-    if (player.board[e[0] + 1] && typeof player.board[e[0] + 1][e[1] - 1] === 'boolean') {
-      player.board[e[0] + 1][e[1] - 1] = 0;
-      document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
-    }
-    if (player.board[e[0] - 1] && typeof player.board[e[0] - 1][e[1] + 1] === 'boolean') {
-      player.board[e[0] - 1][e[1] + 1] = 0;
-      document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
-    }
-  }
 
   const computerAction = (player, compMove, move, go) => {
     let first = [compMove[0], compMove[1], compMove[2]];
@@ -962,12 +940,12 @@ const domManager = (() => {
     } else {
       shot.className = 'water';
     }
-
+    const name = player.board[go[0][0]][go[0][1]];
     move = gameLoop_computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
     if(!gameLoop_computer.smart){
-      shipSaved.push([move[0], move[1]]);
-      gameLoop_computer.makeAttacks(shipSaved, player.board);
+      const ship = player.ships.find(ship => ship.name == name);
+      gameLoop_computer.makeAttacks(ship, player);
       compMove = gameLoop_computer.makeMove(player.board, player.ships);
       shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
       if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
@@ -975,13 +953,11 @@ const domManager = (() => {
       } else {
         shot.className = 'water disable-event';
       }
-      shipSaved = [];
       move = [];
       go = [];
     }
 
     if (shot.className === 'hit disable-event' && gameLoop_computer.smart) {
-      shipSaved.push([move[0], move[1]]);
       computerAction(player, compMove, move, go);
     }
   }
@@ -1010,9 +986,6 @@ const domManager = (() => {
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
         }
-        if (typeof computer.board[i][j] === 'string') {
-          tdC.classList.add('ship');
-        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdP.addEventListener('click', () => {
@@ -1037,8 +1010,6 @@ const domManager = (() => {
                 shot.className = 'water disable-event';
               }
               if (computer.smart) {
-                shipSaved = [];
-                shipSaved.push([compMove[0], compMove[1]]);
                 computerAction(player, compMove, [], []);
               }
             } else {
