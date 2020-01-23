@@ -59,11 +59,13 @@ const domManager = (() => {
     let tdP, tdC;
     const playerBoardContainer = document.querySelector('.player-board');
     const computerBoardContainer = document.querySelector('.computer-board');
-    playerBoardContainer.innerHTML = '';
-    computerBoardContainer.innerHTML = '';
     const container = document.querySelector('.container');
     const score = document.querySelector('.scoreboard');
     const h2 = document.createElement('h2');
+    score.innerHTML = '';
+    container.classList.remove('disable-event');
+    playerBoardContainer.innerHTML = '';
+    computerBoardContainer.innerHTML = '';
     playerBoardContainer.insertAdjacentElement('afterbegin', tableP);
     playerBoardContainer.insertAdjacentHTML('beforeend', radar);
     computerBoardContainer.insertAdjacentElement('afterbegin', tableC);
@@ -137,6 +139,7 @@ const gameLoop = () => {
   const gameBoard = GameBoard();
   const shipsPlayer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   const shipsComputer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
+  const container = document.querySelector('.container');
 
   player = Player(shipsPlayer, gameBoard);
   computer = Computer(shipsComputer, gameBoard);
