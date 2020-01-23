@@ -91,6 +91,9 @@ const Player = (ships, gameBoard) => ({
         document.getElementById(`C-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
     });
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 
