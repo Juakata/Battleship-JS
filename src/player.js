@@ -43,6 +43,9 @@ const Player = (ships, gameBoard) => ({
       this.removeFromOption([x, y]);
       gameBoard.receiveAttack(x, y, board, ships);
     }
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 

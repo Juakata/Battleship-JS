@@ -270,6 +270,9 @@ const Player = (ships, gameBoard) => ({
       this.removeFromOption([x, y]);
       gameBoard.receiveAttack(x, y, board, ships);
     }
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 
@@ -393,6 +396,9 @@ const Computer = (ships, gameBoard) => ({
       }
       return send;
     }
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 
@@ -677,7 +683,7 @@ module.exports = function (moduleId, list, options) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(7);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n\n}\n", ""]);
+exports.push([module.i, "body {\n  background-color: black;\n}\ntable {\n  border: 1px solid green;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n  color: green;\n}\n\ntr {\n  border: 1px solid green;\n}\n\ntd {\n  border: 1px solid green;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: rgb(0, 54, 0);\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n\n}\n\nbody {\n  background-color: black;\n  font-family: \"Lucida Console\", Monaco, monospace;\n  color: green;\n}\n\nheader {\n  text-align: center;\n  height: 20%;\n}\n\n.scoreboard__score {\n  justify-content: space-between;\n  display: flex;\n  width: 5%;\n  margin: 0 auto;\n}\n\n.scoreboard__header {\n  margin-top: -15px;\n}\n\n.scoreboard__score {\n  font-size: 30px;\n  margin-top: -40px;\n}\n\n.container {\n  display: flex;\n  justify-content: space-evenly;\n  margin: 0 auto;\n  position: relative;\n}\n.player-ship-list h {\n}\n\n.computer-ship-list {\n}\n\n.radar {\n  top: 6%;\n  border: 1px solid green;\n  height: 500px;\n  width: 500px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  position: absolute;\n  z-index: -50;\n}\n\n.first-circle {\n  border: 1px solid green;\n  height: 400px;\n  width: 400px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.second-circle {\n  border: 1px solid green;\n  height: 250px;\n  width: 250px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.line {\n  z-index: -45;\n  position: absolute;\n  bottom: 50%;\n  width: 500px;\n  height: 250px;\n  will-change: transform;\n  transform-origin: 50% 100%;\n  border-radius: 50% 50% 0 0 / 100% 100% 0 0;\n  background-image: linear-gradient(135deg, rgba(0, 128, 0, 0.8) 0%, rgba(0, 0, 0, 0.02) 70%,rgba(0, 0, 0, 0) 100%);\n  clip-path: polygon(100% 0, 100% 10%,50% 100%, 0 100%, 0 0);\n  animation: rotate360 4s infinite linear;\n}\n\n.line:after {\n  content: \"\";\n  position: absolute;\n  width: 50%;\n  bottom: -1px;\n  border-top: 3px solid rgba(0, 128, 0, 0.8);\n  box-shadow: 0 0 3px rgba(0, 128, 0, 0.6);\n  border-radius: 9px;\n}\n\n\n@keyframes rotate360 {\n  0% {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(-360deg);\n  }\n}\n\n.reset {\n  display: block;\n  margin: 30px auto;\n  padding: 20px 30px;\n  font-size: 18px;\n  background-color: green;\n  border: none;\n}\n\n.reset:focus {\n  outline: none;\n}\n\n.reset:hover {\n  background-color: rgb(0, 54, 0);\n  color: darkgrey;\n}", ""]);
 // Exports
 module.exports = exports;
 
@@ -827,7 +833,6 @@ const domManager = (() => {
       go = gameLoop_computer.whereToGo(move[0], move[1], player.board, first, go[1]);
     }
     const shot = document.getElementById(`P-${go[0][0]}-${go[0][1]}`);
-    console.log(player.board[go[0][0]][go[0][1]]);
     if (typeof player.board[go[0][0]][go[0][1]] === 'string') {
       shot.className = 'hit';
     } else {
@@ -844,14 +849,22 @@ const domManager = (() => {
   const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
-    tableP.classList.add('player-board');
+    const radar = `  <div class="radar">
+      <div class="first-circle">
+        <div class="second-circle">
+          <div class="line"></div>
+        </div>
+    </div>
+  </div>`;
     tableP.classList.add('disable-event');
-    tableC.classList.add('computer-board');
     let rowP, rowC;
     let tdP, tdC;
-    const container = document.querySelector('.container');
-    container.insertAdjacentElement('afterbegin', tableP);
-    container.insertAdjacentElement('beforeend', tableC);
+    const playerBoardContainer = document.querySelector('.player-board');
+    const computerBoardContainer = document.querySelector('.computer-board');
+    playerBoardContainer.insertAdjacentElement('afterbegin', tableP);
+    playerBoardContainer.insertAdjacentHTML('beforeend', radar);
+    computerBoardContainer.insertAdjacentElement('afterbegin', tableC);
+    computerBoardContainer.insertAdjacentHTML('beforeend', radar);
     for (let i = 0; i < 10; i += 1) {
       rowP = document.createElement('tr');
       rowC = document.createElement('tr');
@@ -865,15 +878,10 @@ const domManager = (() => {
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
         }
-        if (typeof computer.board[i][j] === 'string') {
-          tdC.classList.add('ship');
-        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
-        tdP.addEventListener('click', () => {
-          alert(`You clicked ${event.target.id}`);
-        }, false);
         tdC.addEventListener('click', () => {
+
           const coord = event.target.id.split('-');
           if (typeof computer.board[coord[1]][coord[2]] === 'string') {
             event.target.className = 'hit disable-event';
@@ -897,6 +905,7 @@ const domManager = (() => {
               computerAction(player, smart[0], smart[1], smart[2]);
             }
           }
+
         }, false);
       }
     }

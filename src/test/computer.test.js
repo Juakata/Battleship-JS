@@ -7,7 +7,6 @@ describe('Player tests', () => {
   let computer;
   let ships;
   let gameBoard;
-  let board;
   let player;
 
   beforeEach(() => {

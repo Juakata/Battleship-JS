@@ -16,7 +16,6 @@ const domManager = (() => {
       go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
     }
     const shot = document.getElementById(`P-${go[0][0]}-${go[0][1]}`);
-    console.log(player.board[go[0][0]][go[0][1]]);
     if (typeof player.board[go[0][0]][go[0][1]] === 'string') {
       shot.className = 'hit';
     } else {
@@ -33,14 +32,22 @@ const domManager = (() => {
   const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
-    tableP.classList.add('player-board');
+    const radar = `  <div class="radar">
+      <div class="first-circle">
+        <div class="second-circle">
+          <div class="line"></div>
+        </div>
+    </div>
+  </div>`;
     tableP.classList.add('disable-event');
-    tableC.classList.add('computer-board');
     let rowP, rowC;
     let tdP, tdC;
-    const container = document.querySelector('.container');
-    container.insertAdjacentElement('afterbegin', tableP);
-    container.insertAdjacentElement('beforeend', tableC);
+    const playerBoardContainer = document.querySelector('.player-board');
+    const computerBoardContainer = document.querySelector('.computer-board');
+    playerBoardContainer.insertAdjacentElement('afterbegin', tableP);
+    playerBoardContainer.insertAdjacentHTML('beforeend', radar);
+    computerBoardContainer.insertAdjacentElement('afterbegin', tableC);
+    computerBoardContainer.insertAdjacentHTML('beforeend', radar);
     for (let i = 0; i < 10; i += 1) {
       rowP = document.createElement('tr');
       rowC = document.createElement('tr');
@@ -54,15 +61,10 @@ const domManager = (() => {
         if (typeof player.board[i][j] === 'string') {
           tdP.classList.add('ship');
         }
-        if (typeof computer.board[i][j] === 'string') {
-          tdC.classList.add('ship');
-        }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
-        tdP.addEventListener('click', () => {
-          alert(`You clicked ${event.target.id}`);
-        }, false);
         tdC.addEventListener('click', () => {
+
           const coord = event.target.id.split('-');
           if (typeof computer.board[coord[1]][coord[2]] === 'string') {
             event.target.className = 'hit disable-event';
@@ -86,6 +88,7 @@ const domManager = (() => {
               computerAction(player, smart[0], smart[1], smart[2]);
             }
           }
+
         }, false);
       }
     }
