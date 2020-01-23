@@ -20,6 +20,12 @@ td:hover {
   background-color: gray;
 }
 
+#btn-place-ships {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 20px;
+}
+
 .ship {
   background: green;
 }
@@ -35,4 +41,19 @@ td:hover {
 .water {
   background: aqua;
   pointer-events: none;
+}
+
+.edit-board {
+
+}
+
+.edit-container {
+  position: fixed;
+  top: 20%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 20px;
+  background: green;
+  text-align: center;
 }

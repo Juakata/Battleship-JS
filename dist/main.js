@@ -784,7 +784,7 @@ module.exports = function (moduleId, list, options) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(7);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n  pointer-events: none;\n}\n", ""]);
+exports.push([module.i, "\ntable {\n  border: 1px solid black;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n}\n\ntr {\n  border: 1px solid black;\n}\n\ntd {\n  border: 1px solid black;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: gray;\n}\n\n#btn-place-ships {\n  margin-top: 20px;\n  padding: 10px;\n  font-size: 20px;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n  pointer-events: none;\n}\n\n.edit-board {\n\n}\n\n.edit-container {\n  position: fixed;\n  top: 20%;\n  left: 0;\n  right: 0;\n  margin: auto;\n  padding: 20px;\n  background: green;\n  text-align: center;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -926,6 +926,30 @@ let gameLoop_player, gameLoop_computer;
 const domManager = (() => {
   let smart = [];
 
+  const setPlayerBoard = (player) => {
+    const table = document.createElement('table');
+    table.classList.add('edit-board');
+    const editContainer = document.querySelector('.edit-container');
+    const containerTableShips = document.querySelector('.table-ships');
+    containerTableShips.appendChild(table);
+    let row, td;
+    for (let i = 0; i < 10; i += 1) {
+      row = document.createElement('tr');
+      table.appendChild(row);
+      for (let j = 0; j < 10; j += 1) {
+        td = document.createElement('td');
+        row.appendChild(td);
+      }
+    }
+    player.ships.forEach(e => {
+      
+    });
+    const button = document.createElement('button');
+    button.id = 'btn-place-ships';
+    button.innerHTML = 'Place ships randomly';
+    editContainer.appendChild(button);
+  }
+
   const computerAction = (player, compMove, move, go) => {
     let first = [compMove[0], compMove[1], compMove[2]];
     let shot;
@@ -1025,10 +1049,9 @@ const domManager = (() => {
         }, false);
       }
     }
-    console.log(player.options.length);
   }
 
-  return { renderBoard };
+  return { renderBoard, setPlayerBoard };
 
 })();
 
@@ -1037,9 +1060,10 @@ const gameLoop = () => {
   const shipsPlayer = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
   const shipsComputer = [ship_default()(5, 'A'), ship_default()(4, 'B'), ship_default()(3, 'C'), ship_default()(3, 'S'), ship_default()(2, 'D')];
   gameLoop_player = player_default()(shipsPlayer, gameBoard);
-  gameLoop_computer = computer_default()(shipsComputer, gameBoard);
 
-  gameLoop_player.placeShips();
+  domManager.setPlayerBoard(gameLoop_player);
+
+  gameLoop_computer = computer_default()(shipsComputer, gameBoard);
   gameLoop_computer.placeShips();
   domManager.renderBoard(gameLoop_player, gameLoop_computer);
 };

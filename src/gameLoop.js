@@ -8,6 +8,30 @@ let player, computer;
 const domManager = (() => {
   let smart = [];
 
+  const setPlayerBoard = (player) => {
+    const table = document.createElement('table');
+    table.classList.add('edit-board');
+    const editContainer = document.querySelector('.edit-container');
+    const containerTableShips = document.querySelector('.table-ships');
+    containerTableShips.appendChild(table);
+    let row, td;
+    for (let i = 0; i < 10; i += 1) {
+      row = document.createElement('tr');
+      table.appendChild(row);
+      for (let j = 0; j < 10; j += 1) {
+        td = document.createElement('td');
+        row.appendChild(td);
+      }
+    }
+    player.ships.forEach(e => {
+      
+    });
+    const button = document.createElement('button');
+    button.id = 'btn-place-ships';
+    button.innerHTML = 'Place ships randomly';
+    editContainer.appendChild(button);
+  }
+
   const computerAction = (player, compMove, move, go) => {
     let first = [compMove[0], compMove[1], compMove[2]];
     let shot;
@@ -107,10 +131,9 @@ const domManager = (() => {
         }, false);
       }
     }
-    console.log(player.options.length);
   }
 
-  return { renderBoard };
+  return { renderBoard, setPlayerBoard };
 
 })();
 
@@ -119,9 +142,10 @@ const gameLoop = () => {
   const shipsPlayer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   const shipsComputer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   player = Player(shipsPlayer, gameBoard);
-  computer = Computer(shipsComputer, gameBoard);
 
-  player.placeShips();
+  domManager.setPlayerBoard(player);
+
+  computer = Computer(shipsComputer, gameBoard);
   computer.placeShips();
   domManager.renderBoard(player, computer);
 };
