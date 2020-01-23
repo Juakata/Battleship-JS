@@ -7,8 +7,43 @@
 </head>
 
 <body>
+  <header>
+    <h1>Battleship</h1>
+    <div class="scoreboard">
+      <div class="scoreboard__header">
+        <h2>Score </h2>
+      </div>
+      <div class="scoreboard__score">
+        <p>0</p>
+        <p>0</p>
+      </div>
+    </div>
+  </header>
   <main class="container" id="table-container">
+    <div class="player-ship-list">
+      <h3>Sunken Ships</h3>
+      <ol>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+      </ol>
+    </div>
+    <div class="player-board"></div>
+    <div class="computer-board"></div>
+    <div class="computer-ship-list">
+      <h3>Sunken Ships</h3>
+      <ol>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+        <li>Carrier</li>
+      </ol>
+    </div>
   </main>
+  <button class="reset">Reset Game</button>
 
   <script src="main.js"></script>
 </body>

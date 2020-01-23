@@ -160,6 +160,9 @@ const Computer = (ships, gameBoard) => ({
       }
       return send;
     }
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 

@@ -328,6 +328,9 @@ const Player = (ships, gameBoard) => ({
         document.getElementById(`C-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
     });
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 
@@ -500,6 +503,9 @@ const Computer = (ships, gameBoard) => ({
       }
       return send;
     }
+  },
+  gameOver() {
+    return gameBoard.allShipsSunk(ships);
   }
 });
 
@@ -965,14 +971,22 @@ const domManager = (() => {
   const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
     const tableC = document.createElement('table');
-    tableP.classList.add('player-board');
+    const radar = `  <div class="radar">
+      <div class="first-circle">
+        <div class="second-circle">
+          <div class="line"></div>
+        </div>
+    </div>
+  </div>`;
     tableP.classList.add('disable-event');
-    tableC.classList.add('computer-board');
     let rowP, rowC;
     let tdP, tdC;
-    const container = document.querySelector('.container');
-    container.insertAdjacentElement('afterbegin', tableP);
-    container.insertAdjacentElement('beforeend', tableC);
+    const playerBoardContainer = document.querySelector('.player-board');
+    const computerBoardContainer = document.querySelector('.computer-board');
+    playerBoardContainer.insertAdjacentElement('afterbegin', tableP);
+    playerBoardContainer.insertAdjacentHTML('beforeend', radar);
+    computerBoardContainer.insertAdjacentElement('afterbegin', tableC);
+    computerBoardContainer.insertAdjacentHTML('beforeend', radar);
     for (let i = 0; i < 10; i += 1) {
       rowP = document.createElement('tr');
       rowC = document.createElement('tr');
@@ -988,10 +1002,8 @@ const domManager = (() => {
         }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
-        tdP.addEventListener('click', () => {
-          alert(`You clicked ${event.target.id}`);
-        }, false);
         tdC.addEventListener('click', () => {
+
           const coord = event.target.id.split('-');
           if (typeof computer.board[coord[1]][coord[2]] === 'string') {
             event.target.className = 'hit disable-event';

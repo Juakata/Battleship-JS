@@ -1,23 +1,26 @@
-
+body {
+  background-color: black;
+}
 table {
-  border: 1px solid black;
+  border: 1px solid green;
   width: 500px;
   height: auto;
   display: inline-block;
+  color: green;
 }
 
 tr {
-  border: 1px solid black;
+  border: 1px solid green;
 }
 
 td {
-  border: 1px solid black;
+  border: 1px solid green;
   width: 50px;
   height: 50px;
 }
 
 td:hover {
-  background-color: gray;
+  background-color: rgb(0, 54, 0);
 }
 
 .ship {
@@ -35,4 +38,128 @@ td:hover {
 .water {
   background: aqua;
   pointer-events: none;
+}
+
+body {
+  background-color: black;
+  font-family: "Lucida Console", Monaco, monospace;
+  color: green;
+}
+
+header {
+  text-align: center;
+  height: 20%;
+}
+
+.scoreboard__score {
+  justify-content: space-between;
+  display: flex;
+  width: 5%;
+  margin: 0 auto;
+}
+
+.scoreboard__header {
+  margin-top: -15px;
+}
+
+.scoreboard__score {
+  font-size: 30px;
+  margin-top: -40px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  position: relative;
+}
+.player-ship-list h {
+}
+
+.computer-ship-list {
+}
+
+.radar {
+  top: 6%;
+  border: 1px solid green;
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  z-index: -50;
+}
+
+.first-circle {
+  border: 1px solid green;
+  height: 400px;
+  width: 400px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.second-circle {
+  border: 1px solid green;
+  height: 250px;
+  width: 250px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.line {
+  z-index: -45;
+  position: absolute;
+  bottom: 50%;
+  width: 500px;
+  height: 250px;
+  will-change: transform;
+  transform-origin: 50% 100%;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background-image: linear-gradient(135deg, rgba(0, 128, 0, 0.8) 0%, rgba(0, 0, 0, 0.02) 70%,rgba(0, 0, 0, 0) 100%);
+  clip-path: polygon(100% 0, 100% 10%,50% 100%, 0 100%, 0 0);
+  animation: rotate360 4s infinite linear;
+}
+
+.line:after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  bottom: -1px;
+  border-top: 3px solid rgba(0, 128, 0, 0.8);
+  box-shadow: 0 0 3px rgba(0, 128, 0, 0.6);
+  border-radius: 9px;
+}
+
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.reset {
+  display: block;
+  margin: 30px auto;
+  padding: 20px 30px;
+  font-size: 18px;
+  background-color: green;
+  border: none;
+}
+
+.reset:focus {
+  outline: none;
+}
+
+.reset:hover {
+  background-color: rgb(0, 54, 0);
+  color: darkgrey;
 }
