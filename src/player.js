@@ -14,7 +14,18 @@ const Player = (ships, gameBoard) => ({
 
     return [r1, r2, r3]
   },
+  resetBoard(){
+
+    this.board.forEach(row => {
+      row.forEach(element => {
+        element = false;
+        console.log(element);
+      });
+    });
+
+  },
   placeShips() {
+    this.board = gameBoard.createBoard();
     let randoms;
     let result;
     let i = 0;

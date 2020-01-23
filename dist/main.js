@@ -251,7 +251,18 @@ const Player = (ships, gameBoard) => ({
 
     return [r1, r2, r3]
   },
+  resetBoard(){
+
+    this.board.forEach(row => {
+      row.forEach(element => {
+        element = false;
+        console.log(element);
+      });
+    });
+
+  },
   placeShips() {
+    this.board = gameBoard.createBoard();
     let randoms;
     let result;
     let i = 0;
@@ -790,7 +801,7 @@ module.exports = function (moduleId, list, options) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(7);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "body {\n  background-color: black;\n}\ntable {\n  border: 1px solid green;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n  color: green;\n}\n\ntr {\n  border: 1px solid green;\n}\n\ntd {\n  border: 1px solid green;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: rgb(0, 54, 0);\n}\n\n#btn-place-ships {\n  margin-top: 20px;\n  padding: 10px;\n  font-size: 20px;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n  pointer-events: none;\n}\n\nbody {\n  background-color: black;\n  font-family: \"Lucida Console\", Monaco, monospace;\n  color: green;\n}\n\nheader {\n  text-align: center;\n  height: 20%;\n}\n\n.scoreboard__score {\n  justify-content: space-between;\n  display: flex;\n  width: 5%;\n  margin: 0 auto;\n}\n\n.scoreboard__header {\n  margin-top: -15px;\n}\n\n.scoreboard__score {\n  font-size: 30px;\n  margin-top: -40px;\n}\n\n.container {\n  display: flex;\n  justify-content: space-evenly;\n  margin: 0 auto;\n  position: relative;\n}\n.player-ship-list h {\n}\n\n.computer-ship-list {\n}\n\n.radar {\n  top: 6%;\n  border: 1px solid green;\n  height: 500px;\n  width: 500px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  position: absolute;\n  z-index: -50;\n}\n\n.first-circle {\n  border: 1px solid green;\n  height: 400px;\n  width: 400px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.second-circle {\n  border: 1px solid green;\n  height: 250px;\n  width: 250px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.line {\n  z-index: -45;\n  position: absolute;\n  bottom: 50%;\n  width: 500px;\n  height: 250px;\n  will-change: transform;\n  transform-origin: 50% 100%;\n  border-radius: 50% 50% 0 0 / 100% 100% 0 0;\n  background-image: linear-gradient(135deg, rgba(0, 128, 0, 0.8) 0%, rgba(0, 0, 0, 0.02) 70%,rgba(0, 0, 0, 0) 100%);\n  clip-path: polygon(100% 0, 100% 10%,50% 100%, 0 100%, 0 0);\n  animation: rotate360 4s infinite linear;\n}\n\n.line:after {\n  content: \"\";\n  position: absolute;\n  width: 50%;\n  bottom: -1px;\n  border-top: 3px solid rgba(0, 128, 0, 0.8);\n  box-shadow: 0 0 3px rgba(0, 128, 0, 0.6);\n  border-radius: 9px;\n}\n\n\n@keyframes rotate360 {\n  0% {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(-360deg);\n  }\n}\n\n.reset {\n  display: block;\n  margin: 30px auto;\n  padding: 20px 30px;\n  font-size: 18px;\n  background-color: green;\n  border: none;\n}\n\n.reset:focus {\n  outline: none;\n}\n\n.reset:hover {\n  background-color: rgb(0, 54, 0);\n  color: darkgrey;\n}\n\n.edit-board {\n  margin-top: 5%;\n}\n\n.edit-container {\n  position: fixed;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  right: 0;\n  margin: auto;\n  padding: 20px;\n  background: white;\n  opacity: 0.6;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "body {\n  background-color: black;\n}\ntable {\n  border: 1px solid green;\n  width: 500px;\n  height: auto;\n  display: inline-block;\n  color: green;\n}\n\ntr {\n  border: 1px solid green;\n}\n\ntd {\n  border: 1px solid green;\n  width: 50px;\n  height: 50px;\n}\n\ntd:hover {\n  background-color: rgb(0, 54, 0);\n}\n\n#btn-place-ships, #start-game {\n  margin-top: 20px;\n  padding: 10px;\n  font-size: 20px;\n}\n\n.display-none {\n  display: none;\n}\n\n.ship {\n  background: green;\n}\n\n.hit {\n  background: red;\n\n}\n.disable-event {\n  pointer-events: none;\n}\n\n.water {\n  background: aqua;\n  pointer-events: none;\n}\n\nbody {\n  background-color: black;\n  font-family: \"Lucida Console\", Monaco, monospace;\n  color: green;\n}\n\nheader {\n  text-align: center;\n  height: 20%;\n}\n\n.scoreboard__score {\n  justify-content: space-between;\n  display: flex;\n  width: 5%;\n  margin: 0 auto;\n}\n\n.scoreboard__header {\n  margin-top: -15px;\n}\n\n.scoreboard__score {\n  font-size: 30px;\n  margin-top: -40px;\n}\n\n.container {\n  display: flex;\n  justify-content: space-evenly;\n  margin: 0 auto;\n  position: relative;\n}\n.player-ship-list h {\n}\n\n.computer-ship-list {\n}\n\n.radar {\n  top: 6%;\n  border: 1px solid green;\n  height: 500px;\n  width: 500px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  position: absolute;\n  z-index: -50;\n}\n\n.first-circle {\n  border: 1px solid green;\n  height: 400px;\n  width: 400px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.second-circle {\n  border: 1px solid green;\n  height: 250px;\n  width: 250px;\n  border-radius: 50%;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}\n\n.line {\n  z-index: -45;\n  position: absolute;\n  bottom: 50%;\n  width: 500px;\n  height: 250px;\n  will-change: transform;\n  transform-origin: 50% 100%;\n  border-radius: 50% 50% 0 0 / 100% 100% 0 0;\n  background-image: linear-gradient(135deg, rgba(0, 128, 0, 0.8) 0%, rgba(0, 0, 0, 0.02) 70%,rgba(0, 0, 0, 0) 100%);\n  clip-path: polygon(100% 0, 100% 10%,50% 100%, 0 100%, 0 0);\n  animation: rotate360 4s infinite linear;\n}\n\n.line:after {\n  content: \"\";\n  position: absolute;\n  width: 50%;\n  bottom: -1px;\n  border-top: 3px solid rgba(0, 128, 0, 0.8);\n  box-shadow: 0 0 3px rgba(0, 128, 0, 0.6);\n  border-radius: 9px;\n}\n\n\n@keyframes rotate360 {\n  0% {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(-360deg);\n  }\n}\n\n.reset {\n  display: block;\n  margin: 30px auto;\n  padding: 20px 30px;\n  font-size: 18px;\n  background-color: green;\n  border: none;\n}\n\n.reset:focus {\n  outline: none;\n}\n\n.reset:hover {\n  background-color: rgb(0, 54, 0);\n  color: darkgrey;\n}\n\n.edit-board {\n  margin-top: 5%;\n}\n\n.edit-container {\n  position: fixed;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  right: 0;\n  margin: auto;\n  padding: 20px;\n  background: rgba(255, 255, 255, 0.8);\n  text-align: center;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -932,9 +943,22 @@ let gameLoop_player, gameLoop_computer;
 const domManager = (() => {
   let smart = [];
 
-  const setPlayerBoard = (player) => {
+  const displaykShips = (player) => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (typeof player.board[i][j] === 'string') {
+          document.getElementById(`td-${i}-${j}`).classList.add('ship');
+        } else {
+          document.getElementById(`td-${i}-${j}`).className = "";
+        }
+      }
+    }
+  }
+
+  const setPlayerBoard = (player, computer) => {
     const table = document.createElement('table');
     table.classList.add('edit-board');
+    table.id = 'edit-table';
     const editContainer = document.querySelector('.edit-container');
     const containerTableShips = document.querySelector('.table-ships');
     containerTableShips.appendChild(table);
@@ -944,16 +968,30 @@ const domManager = (() => {
       table.appendChild(row);
       for (let j = 0; j < 10; j += 1) {
         td = document.createElement('td');
+        td.id = `td-${i}-${j}`;
         row.appendChild(td);
       }
     }
-    player.ships.forEach(e => {
+    player.placeShips();
+    displaykShips(player);
+    const random = document.createElement('button');
+    const start = document.createElement('button');
+    random.id = 'btn-place-ships';
+    random.innerHTML = 'Place ships randomly';
+    start.id = 'start-game';
+    start.innerHTML = 'Start Game';
+    editContainer.appendChild(random);
+    editContainer.appendChild(start);
 
-    });
-    const button = document.createElement('button');
-    button.id = 'btn-place-ships';
-    button.innerHTML = 'Place ships randomly';
-    editContainer.appendChild(button);
+    random.addEventListener('click', () => {
+      player.placeShips();
+      displaykShips(player);
+    }, false);
+
+    start.addEventListener('click', () => {
+      editContainer.classList.add('display-none');
+      domManager.renderBoard(player, computer);
+    }, false);
   }
 
   const computerAction = (player, compMove, move, go) => {
@@ -1090,12 +1128,9 @@ const gameLoop = () => {
   const container = document.querySelector('.container');
 
   gameLoop_player = player_default()(shipsPlayer, gameBoard);
-
-  domManager.setPlayerBoard(gameLoop_player);
-
   gameLoop_computer = computer_default()(shipsComputer, gameBoard);
   gameLoop_computer.placeShips();
-  domManager.renderBoard(gameLoop_player, gameLoop_computer);
+  domManager.setPlayerBoard(gameLoop_player, gameLoop_computer);
 };
 
 /* harmony default export */ var src_gameLoop = (gameLoop);

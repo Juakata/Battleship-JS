@@ -8,9 +8,22 @@ let player, computer;
 const domManager = (() => {
   let smart = [];
 
-  const setPlayerBoard = (player) => {
+  const displaykShips = (player) => {
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (typeof player.board[i][j] === 'string') {
+          document.getElementById(`td-${i}-${j}`).classList.add('ship');
+        } else {
+          document.getElementById(`td-${i}-${j}`).className = "";
+        }
+      }
+    }
+  }
+
+  const setPlayerBoard = (player, computer) => {
     const table = document.createElement('table');
     table.classList.add('edit-board');
+    table.id = 'edit-table';
     const editContainer = document.querySelector('.edit-container');
     const containerTableShips = document.querySelector('.table-ships');
     containerTableShips.appendChild(table);
@@ -20,16 +33,30 @@ const domManager = (() => {
       table.appendChild(row);
       for (let j = 0; j < 10; j += 1) {
         td = document.createElement('td');
+        td.id = `td-${i}-${j}`;
         row.appendChild(td);
       }
     }
-    player.ships.forEach(e => {
+    player.placeShips();
+    displaykShips(player);
+    const random = document.createElement('button');
+    const start = document.createElement('button');
+    random.id = 'btn-place-ships';
+    random.innerHTML = 'Place ships randomly';
+    start.id = 'start-game';
+    start.innerHTML = 'Start Game';
+    editContainer.appendChild(random);
+    editContainer.appendChild(start);
 
-    });
-    const button = document.createElement('button');
-    button.id = 'btn-place-ships';
-    button.innerHTML = 'Place ships randomly';
-    editContainer.appendChild(button);
+    random.addEventListener('click', () => {
+      player.placeShips();
+      displaykShips(player);
+    }, false);
+
+    start.addEventListener('click', () => {
+      editContainer.classList.add('display-none');
+      domManager.renderBoard(player, computer);
+    }, false);
   }
 
   const computerAction = (player, compMove, move, go) => {
@@ -166,12 +193,9 @@ const gameLoop = () => {
   const container = document.querySelector('.container');
 
   player = Player(shipsPlayer, gameBoard);
-
-  domManager.setPlayerBoard(player);
-
   computer = Computer(shipsComputer, gameBoard);
   computer.placeShips();
-  domManager.renderBoard(player, computer);
+  domManager.setPlayerBoard(player, computer);
 };
 
 export default gameLoop;
