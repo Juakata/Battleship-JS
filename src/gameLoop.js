@@ -55,6 +55,9 @@ const domManager = (() => {
 
     start.addEventListener('click', () => {
       editContainer.classList.add('display-none');
+      containerTableShips.removeChild(table);
+      editContainer.removeChild(random);
+      editContainer.removeChild(start);
       domManager.renderBoard(player, computer);
     }, false);
   }
@@ -195,6 +198,7 @@ const gameLoop = () => {
   player = Player(shipsPlayer, gameBoard);
   computer = Computer(shipsComputer, gameBoard);
   computer.placeShips();
+  document.getElementById('edit-container').className = 'edit-container';
   domManager.setPlayerBoard(player, computer);
 };
 

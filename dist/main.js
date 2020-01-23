@@ -990,6 +990,9 @@ const domManager = (() => {
 
     start.addEventListener('click', () => {
       editContainer.classList.add('display-none');
+      containerTableShips.removeChild(table);
+      editContainer.removeChild(random);
+      editContainer.removeChild(start);
       domManager.renderBoard(player, computer);
     }, false);
   }
@@ -1130,6 +1133,7 @@ const gameLoop = () => {
   gameLoop_player = player_default()(shipsPlayer, gameBoard);
   gameLoop_computer = computer_default()(shipsComputer, gameBoard);
   gameLoop_computer.placeShips();
+  document.getElementById('edit-container').className = 'edit-container';
   domManager.setPlayerBoard(gameLoop_player, gameLoop_computer);
 };
 
