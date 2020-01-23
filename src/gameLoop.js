@@ -25,7 +25,7 @@ const domManager = (() => {
     const name = player.board[go[0][0]][go[0][1]];
     move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
-    if(!computer.smart){
+    if (!computer.smart) {
       const ship = player.ships.find(ship => ship.name == name);
       computer.makeAttacks(ship, player);
       compMove = computer.makeMove(player.board, player.ships);
@@ -59,6 +59,11 @@ const domManager = (() => {
     let tdP, tdC;
     const playerBoardContainer = document.querySelector('.player-board');
     const computerBoardContainer = document.querySelector('.computer-board');
+    playerBoardContainer.innerHTML = '';
+    computerBoardContainer.innerHTML = '';
+    const container = document.querySelector('.container');
+    const score = document.querySelector('.scoreboard');
+    const h2 = document.createElement('h2');
     playerBoardContainer.insertAdjacentElement('afterbegin', tableP);
     playerBoardContainer.insertAdjacentHTML('beforeend', radar);
     computerBoardContainer.insertAdjacentElement('afterbegin', tableC);
@@ -88,6 +93,11 @@ const domManager = (() => {
           }
           const name = computer.board[coord[1]][coord[2]];
           player.makeMove(coord[1], coord[2], computer.board, computer.ships);
+          if (computer.gameOver() === true) {
+            h2.innerText = 'Player 1 won!';
+            score.appendChild(h2);
+            container.classList.add('disable-event');
+          }
           if (computer.board[coord[1]][coord[2]] !== 1) {
             if (!computer.smart) {
               const compMove = computer.makeMove(player.board, player.ships);
@@ -109,11 +119,14 @@ const domManager = (() => {
               player.makeAttacks(ship, computer);
             }
           }
-          console.log(player.options.length);
+          if (player.gameOver() === true) {
+            h2.innerText = 'Computer won!';
+            score.appendChild(h2);
+            container.classList.add('disable-event');
+          }
         }, false);
       }
     }
-    console.log(player.options.length);
   }
 
   return { renderBoard };
@@ -124,9 +137,9 @@ const gameLoop = () => {
   const gameBoard = GameBoard();
   const shipsPlayer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   const shipsComputer = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
+
   player = Player(shipsPlayer, gameBoard);
   computer = Computer(shipsComputer, gameBoard);
-
   player.placeShips();
   computer.placeShips();
   domManager.renderBoard(player, computer);
