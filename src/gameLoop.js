@@ -8,11 +8,141 @@ let player, computer;
 const domManager = (() => {
   let smart = [];
 
+  const getAllTdAfter = first => {
+    let text = first.id;
+
+    const firstId = first.id.split('-').splice(1, 2);
+    const down = document.getElementById(`td-${parseInt(firstId[0])+1}-${firstId[1]}`);
+
+    text += ` ${down.id}`;
+    return text;
+  }
+
+  const getAllTdBefore = first => {
+    let text = first.id;
+
+    const firstId = first.id.split('-').splice(1, 2);
+
+    let i = 1;
+    let down, up, right, left, flag, x, y;
+    let upCount = 0;
+    let downCount = 0;
+    let rightCount = 0;
+    let leftCount = 0;
+    const forget = [];
+    do {
+      flag = 0;
+      down = document.getElementById(`td-${(parseInt(firstId[0]) + i)}-${firstId[1]}`);
+      up = document.getElementById(`td-${(parseInt(firstId[0]) - i)}-${firstId[1]}`);
+      right = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) + i)}`);
+      left = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) - i)}`);
+
+      if (down && down.className === 'ship move' && !forget.includes('down')) {
+        text += ` ${down.id}`;
+        downCount += 1;
+        flag += 1;
+      } else {
+        if (!forget.includes('down')) {
+          forget.push('down');
+        }
+      }
+      if (up && up.className === 'ship move' && !forget.includes('up') ) {
+        text += ` ${up.id}`;
+        upCount += 1;
+        flag += 1;
+      } else {
+        if (!forget.includes('up')) {
+          forget.push('up');
+        }
+      }
+      if (right && right.className === 'ship move' && !forget.includes('right')) {
+        text += ` ${right.id}`;
+        rightCount += 1;
+        flag += 1;
+      } else {
+        if (!forget.includes('right')) {
+          forget.push('right');
+        }
+      }
+
+      if (left && left.className === 'ship move' && !forget.includes('left')) {
+        text += ` ${left.id}`;
+        leftCount += 1;
+        flag += 1;
+      } else {
+        if (!forget.includes('left')) {
+          forget.push('left');
+        }
+      }
+      i += 1;
+
+    } while (flag > 0);
+    text += `_up-${upCount} down-${downCount} right-${rightCount} left-${leftCount}`;
+    return text;
+  }
+
+  const addProperties = (first, steps) => {
+      addTdProperties(first);
+      const x = parseInt(first.id.split('-')[1]);
+      const y = parseInt(first.id.split('-')[2]);
+      let td;
+
+      steps.forEach(step => {
+        const go = step.split('-')[0];
+        const max = step.split('-')[1];
+        for (let i = 0; i <= max; i += 1) {
+          switch (go) {
+            case 'up':
+                td = document.getElementById(`td-${(x - i)}-${y}`);
+                addTdProperties(td);
+                break;
+            case 'down':
+                td = document.getElementById(`td-${(x + i)}-${y}`);
+                addTdProperties(td);
+                break;
+            case 'right':
+                td = document.getElementById(`td-${x}-${(y + i)}`);
+                addTdProperties(td);
+                break;
+            case 'left':
+                td = document.getElementById(`td-${x}-${(y - i)}`);
+                addTdProperties(td);
+                break;
+          }
+        }
+      });
+  }
+
+  const addTdProperties = td => {
+      td.classList.add('ship');
+      td.classList.add('move');
+      td.draggable = true;
+
+      td.addEventListener('dragstart', () => {
+        const text = getAllTdBefore(td);
+        event.dataTransfer.setData("text", text);
+      });
+
+      td.addEventListener('dragend', () => {
+
+      }, false);
+  }
+
+  const removeTdProperties = all => {
+    all.forEach(element => {
+      const id = element.split('-');
+      const td = document.getElementById(`td-${id[1]}-${id[2]}`);
+      td.className = '';
+      td.draggable = false;
+    });
+  }
+
   const displaykShips = (player) => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         if (typeof player.board[i][j] === 'string') {
-          document.getElementById(`td-${i}-${j}`).classList.add('ship');
+          const current_td = document.getElementById(`td-${i}-${j}`);
+          addTdProperties(current_td);
         } else {
           document.getElementById(`td-${i}-${j}`).className = "";
         }
@@ -47,6 +177,30 @@ const domManager = (() => {
     start.innerHTML = 'Start Game';
     editContainer.appendChild(random);
     editContainer.appendChild(start);
+
+    table.addEventListener('dragover', () => {
+      event.preventDefault();
+    }, false);
+
+    table.addEventListener('drop', () => {
+      event.preventDefault();
+      const text = event.dataTransfer.getData("text");
+      const array = text.split('_');
+      const allBefore = array[0].split(' ');
+      const originId = allBefore[0].split('-');
+      const origin = document.getElementById(`td-${originId[1]}-${originId[2]}`);
+
+      if(origin && origin.className === 'ship move'){
+        const steps = array[1].split(' ');
+        const result = player.changeShip(origin, event.target, steps);
+        if (result) {
+          removeTdProperties(allBefore);
+          addProperties(event.target, steps);        
+        }
+      }
+    }, false);
+
+
 
     random.addEventListener('click', () => {
       player.placeShips();

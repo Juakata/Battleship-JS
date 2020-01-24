@@ -14,15 +14,45 @@ const Player = (ships, gameBoard) => ({
 
     return [r1, r2, r3]
   },
-  resetBoard(){
-
-    this.board.forEach(row => {
-      row.forEach(element => {
-        element = false;
-        console.log(element);
-      });
+  changeShip(origin, first, steps) {
+    let ox = parseInt(origin.id.split('-')[1]);
+    let oy = parseInt(origin.id.split('-')[2]);
+    let x = parseInt(first.id.split('-')[1]);
+    let y = parseInt(first.id.split('-')[2]);
+    const shipSaved = [];
+    const shipName = this.board[ox][oy];
+    const ship = ships.find(element => element.name == shipName);
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (this.board[i][j] === shipName) {
+          shipSaved.push([i, j]);
+          this.board[i][j] = false;
+        }
+      }
+    }
+    steps.forEach(step => {
+      const go = step.split('-')[0];
+      const max = step.split('-')[1];
+      for (let i = 0; i < max; i += 1) {
+        switch (go) {
+          case 'up':
+              x -= 1;
+              break;
+          case 'left':
+              y -= 1;
+              break;
+        }
+      }
     });
-
+    const result = gameBoard.canPlace(x, y, this.board, ship.orientation, ship);
+    if (result) {
+      gameBoard.addShip(x, y, this.board, ship.orientation, ship);
+    } else {
+      shipSaved.forEach(save => {
+        this.board[save[0]][save[1]] = shipName;
+      });
+    }
+    return result;
   },
   placeShips() {
     this.board = gameBoard.createBoard();
@@ -59,7 +89,7 @@ const Player = (ships, gameBoard) => ({
     const board = computer.board;
     const ships = computer.ships;
     const elements = [];
-    if(ship.orientation === 'v'){
+    if(ship.orientation === 'vertical'){
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
         elements.push([i, ship.first[1]]);
       }

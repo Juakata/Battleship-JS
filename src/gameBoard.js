@@ -77,7 +77,7 @@ const GameBoard = () => {
       for (let i = y; i < ship.size + y; i += 1) {
         if (i === y) {
           ship.first = [x, y];
-          ship.orientation = 'h';
+          ship.orientation = 'horizontal';
         }
         board[x][i] = ship.name;
       }
@@ -85,7 +85,7 @@ const GameBoard = () => {
       for (let i = x; i < ship.size + x; i += 1) {
         if (i === x) {
           ship.first = [x, y];
-          ship.orientation = 'v';
+          ship.orientation = 'vertical';
         }
         board[i][y] = ship.name;
       }

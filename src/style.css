@@ -178,6 +178,10 @@ header {
   margin-top: 5%;
 }
 
+.move {
+  cursor: move;
+}
+
 .edit-container {
   position: fixed;
   width: 100%;
