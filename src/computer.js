@@ -29,7 +29,7 @@ const Computer = (ships, gameBoard) => ({
     const ships = player.ships;
     const elements = [];
     const first = [0, 0, 'A'];
-    if(ship.orientation === 'v'){
+    if(ship.orientation === 'vertical'){
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
         elements.push([i, ship.first[1]]);
       }
