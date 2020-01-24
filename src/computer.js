@@ -109,6 +109,10 @@ const Computer = (ships, gameBoard) => ({
     let send;
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
       send = [x + 1, y];
+      if (typeof board[x + 1][y] === "string") {
+        not.push(2);
+        not.push(3);
+      }
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
       if (!not.includes(0)) {
         not.push(0);
@@ -121,7 +125,7 @@ const Computer = (ships, gameBoard) => ({
         }
       }
       send = [x, y + 1];
-    } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number') {
+    } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number' && !not.includes(3)) {
       for (let i = 0; i < 3; i += 1) {
         if (!not.includes(i)) {
           not.push(i);

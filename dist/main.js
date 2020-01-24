@@ -413,7 +413,7 @@ const Computer = (ships, gameBoard) => ({
     const ships = player.ships;
     const elements = [];
     const first = [0, 0, 'A'];
-    if(ship.orientation === 'v'){
+    if(ship.orientation === 'vertical'){
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
         elements.push([i, ship.first[1]]);
       }
@@ -1109,7 +1109,21 @@ const domManager = (() => {
           const current_td = document.getElementById(`td-${i}-${j}`);
           addTdProperties(current_td);
         } else {
-          document.getElementById(`td-${i}-${j}`).className = "";
+          const td = document.getElementById(`td-${i}-${j}`);
+          td.className = "";
+          td.addEventListener('dragover', () => {
+            event.preventDefault();
+            const text = event.dataTransfer.getData("text");
+            const array = text.split('_');
+            const allBefore = array[0].split(' ');
+            const originId = allBefore[0].split('-');
+            const origin = document.getElementById(`td-${originId[1]}-${originId[2]}`);
+            event.target.style.background = 'blue';
+            if(origin && origin.className === 'ship move'){
+              const steps = array[1].split(' ');
+
+            }
+          }, false);
         }
       }
     }
@@ -1160,7 +1174,7 @@ const domManager = (() => {
         const result = player.changeShip(origin, event.target, steps);
         if (result) {
           removeTdProperties(allBefore);
-          addProperties(event.target, steps);        
+          addProperties(event.target, steps);
         }
       }
     }, false);

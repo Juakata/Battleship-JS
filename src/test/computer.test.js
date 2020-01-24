@@ -153,4 +153,23 @@ describe('Player tests', () => {
     expect(go[0]).toMatchObject([2, 0]);
     expect(move).toMatchObject([2, 0]);
   });
+
+  test('Computer should be smart destroying a vertical ship at the bottom', () => {
+    gameBoard.addShip(6, 8, player.board, 'vertical', ships[1]);
+    const not = [];
+    const hit = computer.makeSmartMove(8, 8, player.board, ships, [8, 8, 'B']);
+    let first = [8, 8, 'B'];
+    go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
+    let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([9, 8]);
+    expect(move).toMatchObject([9, 8]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([7, 8]);
+    expect(move).toMatchObject([7, 8]);
+    go = computer.whereToGo(move[0], move[1], player.board, first, go[1]);
+    move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
+    expect(go[0]).toMatchObject([6, 8]);
+    expect(move).toMatchObject([6, 8]);
+  });
 })
