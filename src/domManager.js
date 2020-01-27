@@ -215,7 +215,7 @@ const domManager = (() => {
     move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
     if (!computer.smart) {
-      const ship = player.ships.find((element) => element.name === name);
+      const ship = player.ships.find(element => element.name === name);
       computer.makeAttacks(ship, player);
       compMove = computer.makeMove(player.board, player.ships);
       shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
@@ -230,6 +230,52 @@ const domManager = (() => {
 
     if (shot.className === 'hit disable-event' && computer.smart) {
       computerAction(player, compMove, move, go, computer);
+    }
+  };
+
+  const handleClick = (e, computer, player) => {
+    const event = e;
+    const coord = event.target.id.split('-');
+    const h2 = document.createElement('h2');
+    const score = document.querySelector('.scoreboard');
+    const container = document.querySelector('.container');
+    if (typeof computer.board[coord[1]][coord[2]] === 'string') {
+      event.target.className = 'hit disable-event';
+    } else {
+      event.target.className = 'water disable-event';
+    }
+    const name = computer.board[coord[1]][coord[2]];
+    player.makeMove(coord[1], coord[2], computer.board, computer.ships);
+    if (computer.gameOver() === true) {
+      h2.innerText = 'Player 1 won!';
+      score.appendChild(h2);
+      container.classList.add('disable-event');
+    }
+    if (computer.board[coord[1]][coord[2]] !== 1) {
+      if (!computer.smart) {
+        const compMove = computer.makeMove(player.board, player.ships);
+        const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
+        if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
+          shot.className = 'hit disable-event';
+        } else {
+          shot.className = 'water disable-event';
+        }
+        if (computer.smart) {
+          computerAction(player, compMove, [], [], computer);
+        }
+      } else {
+        computerAction(player, smart[0], smart[1], smart[2], computer);
+      }
+    } else {
+      const ship = computer.ships.find(element => element.name === name);
+      if (ship.isSunk()) {
+        player.makeAttacks(ship, computer);
+      }
+    }
+    if (player.gameOver() === true) {
+      h2.innerText = 'Computer won!';
+      score.appendChild(h2);
+      container.classList.add('disable-event');
     }
   };
 
@@ -250,9 +296,8 @@ const domManager = (() => {
       tdC;
     const playerBoardContainer = document.querySelector('.player-board');
     const computerBoardContainer = document.querySelector('.computer-board');
-    const container = document.querySelector('.container');
     const score = document.querySelector('.scoreboard');
-    const h2 = document.createElement('h2');
+    const container = document.querySelector('.container');
     score.innerHTML = '';
     container.classList.remove('disable-event');
     playerBoardContainer.innerHTML = '';
@@ -277,46 +322,7 @@ const domManager = (() => {
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
         tdC.addEventListener('click', (e) => {
-          const event = e;
-          const coord = event.target.id.split('-');
-          if (typeof computer.board[coord[1]][coord[2]] === 'string') {
-            event.target.className = 'hit disable-event';
-          } else {
-            event.target.className = 'water disable-event';
-          }
-          const name = computer.board[coord[1]][coord[2]];
-          player.makeMove(coord[1], coord[2], computer.board, computer.ships);
-          if (computer.gameOver() === true) {
-            h2.innerText = 'Player 1 won!';
-            score.appendChild(h2);
-            container.classList.add('disable-event');
-          }
-          if (computer.board[coord[1]][coord[2]] !== 1) {
-            if (!computer.smart) {
-              const compMove = computer.makeMove(player.board, player.ships);
-              const shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
-              if (typeof player.board[compMove[0]][compMove[1]] === 'string' || player.board[compMove[0]][compMove[1]] === 1) {
-                shot.className = 'hit disable-event';
-              } else {
-                shot.className = 'water disable-event';
-              }
-              if (computer.smart) {
-                computerAction(player, compMove, [], [], computer);
-              }
-            } else {
-              computerAction(player, smart[0], smart[1], smart[2], computer);
-            }
-          } else {
-            const ship = computer.ships.find((element) => element.name === name);
-            if (ship.isSunk()) {
-              player.makeAttacks(ship, computer);
-            }
-          }
-          if (player.gameOver() === true) {
-            h2.innerText = 'Computer won!';
-            score.appendChild(h2);
-            container.classList.add('disable-event');
-          }
+          handleClick(e, computer, player);
         }, false);
       }
     }

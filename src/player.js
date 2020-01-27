@@ -21,7 +21,7 @@ const Player = (ships, gameBoard) => ({
     let y = parseInt(first.id.split('-')[2], 10);
     const shipSaved = [];
     const shipName = this.board[ox][oy];
-    const ship = ships.find((element) => element.name === shipName);
+    const ship = ships.find(element => element.name === shipName);
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         if (this.board[i][j] === shipName) {

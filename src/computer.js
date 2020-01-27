@@ -154,7 +154,7 @@ const Computer = (ships, gameBoard) => ({
       }
       this.removeFromOption([x, y]);
       gameBoard.receiveAttack(x, y, board, shipsArr);
-      const ship = shipsArr.find((element) => element.name === first[2]);
+      const ship = shipsArr.find(element => element.name === first[2]);
       if (ship.isSunk()) {
         this.smart = false;
       }

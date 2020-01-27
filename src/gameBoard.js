@@ -115,7 +115,7 @@ const GameBoard = () => {
     }
   };
 
-  const allShipsSunk = (ships) => ships.every((ship) => ship.isSunk());
+  const allShipsSunk = ships => ships.every(ship => ship.isSunk());
 
   return {
     createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull,
