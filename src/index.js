@@ -1,4 +1,4 @@
-import './style.css';
+import './main.scss';
 import gameLoop from './gameLoop';
 
 gameLoop();

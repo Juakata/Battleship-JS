@@ -1,13 +1,13 @@
-const Player = require('../player');
-const Ship = require('../ship');
-const GameBoard = require('../gameBoard');
-const Computer = require('../computer');
+import Player from '../player';
+import Ship from '../ship';
+import GameBoard from '../gameBoard';
+import Computer from '../computer';
+
 
 describe('Player tests', () => {
   let player;
   let ships;
   let gameBoard;
-  let board;
   let computer;
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('Player tests', () => {
   test('Player should have ships and a board', () => {
     expect(player.ships.length).toBe(5);
     expect(player.board.length).toBe(10);
-  })
+  });
 
   test('Player place all the ships randomly', () => {
     player.placeShips();
@@ -30,8 +30,8 @@ describe('Player tests', () => {
         if (typeof el === 'string') {
           count += 1;
         }
-      })
-    })
+      });
+    });
     expect(count).toBe(17);
   });
 
@@ -44,10 +44,10 @@ describe('Player tests', () => {
       }
     }
     computer.board.forEach(e => {
-      if(e.includes(false)) {
+      if (e.includes(false)) {
         result += 1;
       }
-    })
+    });
     expect(result).toBe(0);
     expect(player.options.length).toBe(0);
   });
@@ -57,4 +57,4 @@ describe('Player tests', () => {
     player.makeMove(2, 2, computer.board, ships);
     expect(player.options.length).toBe(99);
   });
-})
+});

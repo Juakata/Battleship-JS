@@ -139,4 +139,4 @@ const Player = (ships, gameBoard) => ({
   },
 });
 
-module.exports = Player;
+export default Player;
