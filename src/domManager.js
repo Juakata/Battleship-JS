@@ -58,18 +58,20 @@ const domManager = (() => {
 
   const addTdProperties = (td) => {
     const tdElement = td;
-    tdElement.classList.add('ship');
-    tdElement.classList.add('move');
-    tdElement.draggable = true;
+    if (tdElement) {
+      tdElement.classList.add('ship');
+      tdElement.classList.add('move');
+      tdElement.draggable = true;
 
-    td.addEventListener('dragstart', (event) => {
-      const text = getAllTdBefore(td);
-      event.dataTransfer.setData('text', text);
-    });
+      td.addEventListener('dragstart', (event) => {
+        const text = getAllTdBefore(td);
+        event.dataTransfer.setData('text', text);
+      });
 
-    td.addEventListener('dragend', () => {
+      td.addEventListener('dragend', () => {
 
-    }, false);
+      }, false);
+    }
   };
 
   const addProperties = (first, steps) => {
@@ -168,8 +170,8 @@ const domManager = (() => {
       const allBefore = array[0].split(' ');
       const originId = allBefore[0].split('-');
       const origin = document.getElementById(`td-${originId[1]}-${originId[2]}`);
-
-      if (origin && origin.className === 'ship move') {
+    
+      if (origin && origin.className === 'ship move' && event.target.id !== 'edit-table') {
         const steps = array[1].split(' ');
         const result = player.changeShip(origin, event.target, steps);
         if (result) {
