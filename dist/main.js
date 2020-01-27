@@ -211,7 +211,7 @@ const GameBoard = () => {
   };
 
   const attack = (shipName, ships) => {
-    const ship = ships.find((element) => element.name === shipName);
+    const ship = ships.find(element => element.name === shipName);
     if (!ship.isSunk()) {
       ship.hit();
     }
