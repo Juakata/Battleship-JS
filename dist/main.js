@@ -94,14 +94,13 @@ const Ship = (size, name, first, orientation) => ({
   first,
   orientation,
   life: size,
-  hit() { this.life -= 1 },
+  hit() { this.life -= 1; },
   isSunk() {
-    if (this.life == 0) {
+    if (this.life === 0) {
       return true;
-    } else {
-      return false;
     }
-  }
+    return false;
+  },
 });
 
 module.exports = Ship;
@@ -113,80 +112,86 @@ module.exports = Ship;
 
 const GameBoard = () => {
   const createBoard = () => {
-    const board = Array(10).fill(false).map(x => Array(10).fill(false));
+    const board = Array(10).fill(false).map(() => Array(10).fill(false));
     return board;
-  }
+  };
 
   const canMove = (x, y, board) => {
-    if (typeof board[x, y] === 'integer') {
+    if (typeof board[x][y] === 'number') {
       return false;
     }
     return true;
-  }
+  };
 
   const getOptions = () => {
-    arr = [];
+    const arr = [];
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         arr.push([i, j]);
       }
     }
     return arr;
-  }
+  };
 
   const checkNull = (x, y, board) => {
     if (typeof board[x] === 'undefined') {
       return true;
-    } else if (typeof board[x][y] === 'undefined') {
+    } if (typeof board[x][y] === 'undefined') {
       return true;
     }
     return false;
-  }
+  };
 
   const anyBoatArround = (x, y, board, ship) => {
     if (board[x][y] === 'string' && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x + 1, y, board) && board[x + 1][y] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x - 1, y, board) && board[x - 1][y] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x, y + 1, board) && board[x][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x, y - 1, board) && board[x][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x + 1, y + 1, board) && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x + 1, y + 1, board)
+      && board[x + 1][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x - 1, y - 1, board) && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x - 1, y - 1, board)
+      && board[x - 1][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x + 1, y - 1, board) && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x + 1, y - 1, board)
+      && board[x + 1][y - 1] !== false && board[x][y] !== ship.name) {
       return true;
-    } else if (!checkNull(x - 1, y + 1, board) && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
+    } if (!checkNull(x - 1, y + 1, board)
+      && board[x - 1][y + 1] !== false && board[x][y] !== ship.name) {
       return true;
     }
     return false;
-  }
+  };
 
   const canPlace = (x, y, board, direction, ship) => {
-    if (direction == 'horizontal') {
+    if (direction === 'horizontal') {
       for (let i = y; i < ship.size + y; i += 1) {
-        if (board[x][i] != false || board[x][i] == null || anyBoatArround(x, i, board, ship)) {
+        if (board[x][i] !== false || board[x][i] == null || anyBoatArround(x, i, board, ship)) {
           return false;
         }
       }
-    } else if (direction == 'vertical') {
+    } else if (direction === 'vertical') {
       for (let i = x; i < ship.size + x; i += 1) {
         if (board[i] == null) {
           return false;
-        } else if (board[i][y] != false || anyBoatArround(i, y, board, ship)) {
+        } if (board[i][y] !== false || anyBoatArround(i, y, board, ship)) {
           return false;
         }
       }
     }
     return true;
-  }
+  };
 
-  const addShip = (x, y, board, direction, ship) => {
-    if (direction == 'horizontal' && canPlace(x, y, board, direction, ship)) {
+  const addShip = (x, y, boardObject, direction, shipObject) => {
+    const ship = shipObject;
+    const board = boardObject;
+    if (direction === 'horizontal' && canPlace(x, y, board, direction, ship)) {
       for (let i = y; i < ship.size + y; i += 1) {
         if (i === y) {
           ship.first = [x, y];
@@ -194,7 +199,7 @@ const GameBoard = () => {
         }
         board[x][i] = ship.name;
       }
-    } else if (direction == 'vertical' && canPlace(x, y, board, direction, ship)) {
+    } else if (direction === 'vertical' && canPlace(x, y, board, direction, ship)) {
       for (let i = x; i < ship.size + x; i += 1) {
         if (i === x) {
           ship.first = [x, y];
@@ -203,30 +208,31 @@ const GameBoard = () => {
         board[i][y] = ship.name;
       }
     }
-  }
+  };
 
   const attack = (shipName, ships) => {
-    const ship = ships.find(element => element.name == shipName);
+    const ship = ships.find((element) => element.name === shipName);
     if (!ship.isSunk()) {
       ship.hit();
     }
-  }
+  };
 
-  const receiveAttack = (x, y, board, ships) => {
-    if (typeof board[x][y] == 'string') {
+  const receiveAttack = (x, y, boardObject, ships) => {
+    const board = boardObject;
+    if (typeof board[x][y] === 'string') {
       attack(board[x][y], ships);
       board[x][y] = 1;
-    } else if (typeof board[x][y] == 'boolean') {
+    } else if (typeof board[x][y] === 'boolean') {
       board[x][y] = 0;
     }
-  }
+  };
 
-  const allShipsSunk = (ships) => {
-    return ships.every(ship => ship.isSunk());
-  }
+  const allShipsSunk = (ships) => ships.every((ship) => ship.isSunk());
 
-  return { createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull };
-}
+  return {
+    createBoard, addShip, canPlace, receiveAttack, allShipsSunk, canMove, getOptions, checkNull,
+  };
+};
 
 module.exports = GameBoard;
 
@@ -326,7 +332,6 @@ const Player = (ships, gameBoard) => ({
   },
   makeAttacks(ship, computer) {
     const { board } = computer;
-    const { ships } = computer;
     const elements = [];
     if (ship.orientation === 'vertical') {
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
@@ -968,13 +973,14 @@ var ship_default = /*#__PURE__*/__webpack_require__.n(ship);
 const domManager = (() => {
   let smart = [];
 
-  const getAllTdBefore = first => {
+  const getAllTdBefore = (first) => {
     let text = first.id;
 
     const firstId = first.id.split('-').splice(1, 2);
 
     let i = 1;
-    let down, up, right, left, flag, x, y;
+    let down; let up; let right; let left; let
+      flag;
     let upCount = 0;
     let downCount = 0;
     let rightCount = 0;
@@ -982,62 +988,69 @@ const domManager = (() => {
     const forget = [];
     do {
       flag = 0;
-      down = document.getElementById(`td-${(parseInt(firstId[0]) + i)}-${firstId[1]}`);
-      up = document.getElementById(`td-${(parseInt(firstId[0]) - i)}-${firstId[1]}`);
-      right = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) + i)}`);
-      left = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) - i)}`);
+      down = document.getElementById(`td-${(parseInt(firstId[0], 10) + i)}-${firstId[1]}`);
+      up = document.getElementById(`td-${(parseInt(firstId[0], 10) - i)}-${firstId[1]}`);
+      right = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1], 10) + i)}`);
+      left = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1], 10) - i)}`);
 
       if (down && down.className === 'ship move' && !forget.includes('down')) {
         text += ` ${down.id}`;
         downCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('down')) {
-          forget.push('down');
-        }
+      } else if (!forget.includes('down')) {
+        forget.push('down');
       }
       if (up && up.className === 'ship move' && !forget.includes('up')) {
         text += ` ${up.id}`;
         upCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('up')) {
-          forget.push('up');
-        }
+      } else if (!forget.includes('up')) {
+        forget.push('up');
       }
       if (right && right.className === 'ship move' && !forget.includes('right')) {
         text += ` ${right.id}`;
         rightCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('right')) {
-          forget.push('right');
-        }
+      } else if (!forget.includes('right')) {
+        forget.push('right');
       }
 
       if (left && left.className === 'ship move' && !forget.includes('left')) {
         text += ` ${left.id}`;
         leftCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('left')) {
-          forget.push('left');
-        }
+      } else if (!forget.includes('left')) {
+        forget.push('left');
       }
       i += 1;
-
     } while (flag > 0);
     text += `_up-${upCount} down-${downCount} right-${rightCount} left-${leftCount}`;
     return text;
-  }
+  };
+
+  const addTdProperties = (td) => {
+    const tdElement = td;
+    tdElement.classList.add('ship');
+    tdElement.classList.add('move');
+    tdElement.draggable = true;
+
+    td.addEventListener('dragstart', (event) => {
+      const text = getAllTdBefore(td);
+      event.dataTransfer.setData('text', text);
+    });
+
+    td.addEventListener('dragend', () => {
+
+    }, false);
+  };
 
   const addProperties = (first, steps) => {
     addTdProperties(first);
-    const x = parseInt(first.id.split('-')[1]);
-    const y = parseInt(first.id.split('-')[2]);
+    const x = parseInt(first.id.split('-')[1], 10);
+    const y = parseInt(first.id.split('-')[2], 10);
     let td;
 
-    steps.forEach(step => {
+    steps.forEach((step) => {
       const go = step.split('-')[0];
       const max = step.split('-')[1];
       for (let i = 0; i <= max; i += 1) {
@@ -1058,41 +1071,28 @@ const domManager = (() => {
             td = document.getElementById(`td-${x}-${(y - i)}`);
             addTdProperties(td);
             break;
+          default:
+            break;
         }
       }
     });
-  }
+  };
 
-  const addTdProperties = td => {
-    td.classList.add('ship');
-    td.classList.add('move');
-    td.draggable = true;
-
-    td.addEventListener('dragstart', () => {
-      const text = getAllTdBefore(td);
-      event.dataTransfer.setData("text", text);
-    });
-
-    td.addEventListener('dragend', () => {
-
-    }, false);
-  }
-
-  const removeTdProperties = all => {
-    all.forEach(element => {
+  const removeTdProperties = (all) => {
+    all.forEach((element) => {
       const id = element.split('-');
       const td = document.getElementById(`td-${id[1]}-${id[2]}`);
       td.className = '';
       td.draggable = false;
     });
-  }
+  };
 
   const displaykShips = (player) => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         if (typeof player.board[i][j] === 'string') {
-          const current_td = document.getElementById(`td-${i}-${j}`);
-          addTdProperties(current_td);
+          const currentTd = document.getElementById(`td-${i}-${j}`);
+          addTdProperties(currentTd);
         } else {
           const td = document.getElementById(`td-${i}-${j}`);
           td.className = "";
@@ -1112,7 +1112,7 @@ const domManager = (() => {
         }
       }
     }
-  }
+  };
 
   const setPlayerBoard = (player, computer) => {
     const table = document.createElement('table');
@@ -1121,7 +1121,8 @@ const domManager = (() => {
     const editContainer = document.querySelector('.edit-container');
     const containerTableShips = document.querySelector('.table-ships');
     containerTableShips.appendChild(table);
-    let row, td;
+    let row; let
+      td;
     for (let i = 0; i < 10; i += 1) {
       row = document.createElement('tr');
       table.appendChild(row);
@@ -1142,13 +1143,13 @@ const domManager = (() => {
     editContainer.appendChild(random);
     editContainer.appendChild(start);
 
-    table.addEventListener('dragover', () => {
+    table.addEventListener('dragover', (event) => {
       event.preventDefault();
     }, false);
 
-    table.addEventListener('drop', () => {
+    table.addEventListener('drop', (event) => {
       event.preventDefault();
-      const text = event.dataTransfer.getData("text");
+      const text = event.dataTransfer.getData('text');
       const array = text.split('_');
       const allBefore = array[0].split(' ');
       const originId = allBefore[0].split('-');
@@ -1165,7 +1166,6 @@ const domManager = (() => {
     }, false);
 
 
-
     random.addEventListener('click', () => {
       player.placeShips();
       displaykShips(player);
@@ -1178,10 +1178,13 @@ const domManager = (() => {
       editContainer.removeChild(start);
       domManager.renderBoard(player, computer);
     }, false);
-  }
+  };
 
-  const computerAction = (player, compMove, move, go, computer) => {
-    let first = [compMove[0], compMove[1], compMove[2]];
+  const computerAction = (player, compMoveTo, moveTo, goTo, computer) => {
+    let compMove = compMoveTo;
+    let move = moveTo;
+    let go = goTo;
+    const first = [compMove[0], compMove[1], compMove[2]];
     let shot;
     if (go.length === 0) {
       go = computer.whereToGo(compMove[0], compMove[1], player.board, first, []);
@@ -1198,7 +1201,7 @@ const domManager = (() => {
     move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
     if (!computer.smart) {
-      const ship = player.ships.find(ship => ship.name == name);
+      const ship = player.ships.find((element) => element.name === name);
       computer.makeAttacks(ship, player);
       compMove = computer.makeMove(player.board, player.ships);
       shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
@@ -1214,7 +1217,7 @@ const domManager = (() => {
     if (shot.className === 'hit disable-event' && computer.smart) {
       computerAction(player, compMove, move, go, computer);
     }
-  }
+  };
 
   const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
@@ -1227,8 +1230,10 @@ const domManager = (() => {
     </div>
   </div>`;
     tableP.classList.add('disable-event');
-    let rowP, rowC;
-    let tdP, tdC;
+    let rowP; let
+      rowC;
+    let tdP; let
+      tdC;
     const playerBoardContainer = document.querySelector('.player-board');
     const computerBoardContainer = document.querySelector('.computer-board');
     const container = document.querySelector('.container');
@@ -1257,8 +1262,8 @@ const domManager = (() => {
         }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
-        tdC.addEventListener('click', () => {
-
+        tdC.addEventListener('click', (e) => {
+          const event = e;
           const coord = event.target.id.split('-');
           if (typeof computer.board[coord[1]][coord[2]] === 'string') {
             event.target.className = 'hit disable-event';
@@ -1288,7 +1293,7 @@ const domManager = (() => {
               computerAction(player, smart[0], smart[1], smart[2], computer);
             }
           } else {
-            const ship = computer.ships.find(ship => ship.name == name);
+            const ship = computer.ships.find((element) => element.name === name);
             if (ship.isSunk()) {
               player.makeAttacks(ship, computer);
             }
@@ -1301,13 +1306,13 @@ const domManager = (() => {
         }, false);
       }
     }
-  }
+  };
 
   return { renderBoard, setPlayerBoard };
-
 })();
 
 /* harmony default export */ var src_domManager = (domManager);
+
 // CONCATENATED MODULE: ./src/gameLoop.js
 
 
@@ -1315,7 +1320,8 @@ const domManager = (() => {
 
 
 
-let gameLoop_player, gameLoop_computer;
+let gameLoop_player; let
+  gameLoop_computer;
 
 const gameLoop = () => {
   const gameBoard = gameBoard_default()();

@@ -1,13 +1,14 @@
 const domManager = (() => {
   let smart = [];
 
-  const getAllTdBefore = first => {
+  const getAllTdBefore = (first) => {
     let text = first.id;
 
     const firstId = first.id.split('-').splice(1, 2);
 
     let i = 1;
-    let down, up, right, left, flag, x, y;
+    let down; let up; let right; let left; let
+      flag;
     let upCount = 0;
     let downCount = 0;
     let rightCount = 0;
@@ -15,62 +16,69 @@ const domManager = (() => {
     const forget = [];
     do {
       flag = 0;
-      down = document.getElementById(`td-${(parseInt(firstId[0]) + i)}-${firstId[1]}`);
-      up = document.getElementById(`td-${(parseInt(firstId[0]) - i)}-${firstId[1]}`);
-      right = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) + i)}`);
-      left = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1]) - i)}`);
+      down = document.getElementById(`td-${(parseInt(firstId[0], 10) + i)}-${firstId[1]}`);
+      up = document.getElementById(`td-${(parseInt(firstId[0], 10) - i)}-${firstId[1]}`);
+      right = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1], 10) + i)}`);
+      left = document.getElementById(`td-${firstId[0]}-${(parseInt(firstId[1], 10) - i)}`);
 
       if (down && down.className === 'ship move' && !forget.includes('down')) {
         text += ` ${down.id}`;
         downCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('down')) {
-          forget.push('down');
-        }
+      } else if (!forget.includes('down')) {
+        forget.push('down');
       }
       if (up && up.className === 'ship move' && !forget.includes('up')) {
         text += ` ${up.id}`;
         upCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('up')) {
-          forget.push('up');
-        }
+      } else if (!forget.includes('up')) {
+        forget.push('up');
       }
       if (right && right.className === 'ship move' && !forget.includes('right')) {
         text += ` ${right.id}`;
         rightCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('right')) {
-          forget.push('right');
-        }
+      } else if (!forget.includes('right')) {
+        forget.push('right');
       }
 
       if (left && left.className === 'ship move' && !forget.includes('left')) {
         text += ` ${left.id}`;
         leftCount += 1;
         flag += 1;
-      } else {
-        if (!forget.includes('left')) {
-          forget.push('left');
-        }
+      } else if (!forget.includes('left')) {
+        forget.push('left');
       }
       i += 1;
-
     } while (flag > 0);
     text += `_up-${upCount} down-${downCount} right-${rightCount} left-${leftCount}`;
     return text;
-  }
+  };
+
+  const addTdProperties = (td) => {
+    const tdElement = td;
+    tdElement.classList.add('ship');
+    tdElement.classList.add('move');
+    tdElement.draggable = true;
+
+    td.addEventListener('dragstart', (event) => {
+      const text = getAllTdBefore(td);
+      event.dataTransfer.setData('text', text);
+    });
+
+    td.addEventListener('dragend', () => {
+
+    }, false);
+  };
 
   const addProperties = (first, steps) => {
     addTdProperties(first);
-    const x = parseInt(first.id.split('-')[1]);
-    const y = parseInt(first.id.split('-')[2]);
+    const x = parseInt(first.id.split('-')[1], 10);
+    const y = parseInt(first.id.split('-')[2], 10);
     let td;
 
-    steps.forEach(step => {
+    steps.forEach((step) => {
       const go = step.split('-')[0];
       const max = step.split('-')[1];
       for (let i = 0; i <= max; i += 1) {
@@ -91,47 +99,34 @@ const domManager = (() => {
             td = document.getElementById(`td-${x}-${(y - i)}`);
             addTdProperties(td);
             break;
+          default:
+            break;
         }
       }
     });
-  }
+  };
 
-  const addTdProperties = td => {
-    td.classList.add('ship');
-    td.classList.add('move');
-    td.draggable = true;
-
-    td.addEventListener('dragstart', () => {
-      const text = getAllTdBefore(td);
-      event.dataTransfer.setData("text", text);
-    });
-
-    td.addEventListener('dragend', () => {
-
-    }, false);
-  }
-
-  const removeTdProperties = all => {
-    all.forEach(element => {
+  const removeTdProperties = (all) => {
+    all.forEach((element) => {
       const id = element.split('-');
       const td = document.getElementById(`td-${id[1]}-${id[2]}`);
       td.className = '';
       td.draggable = false;
     });
-  }
+  };
 
   const displaykShips = (player) => {
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         if (typeof player.board[i][j] === 'string') {
-          const current_td = document.getElementById(`td-${i}-${j}`);
-          addTdProperties(current_td);
+          const currentTd = document.getElementById(`td-${i}-${j}`);
+          addTdProperties(currentTd);
         } else {
-          document.getElementById(`td-${i}-${j}`).className = "";
+          document.getElementById(`td-${i}-${j}`).className = '';
         }
       }
     }
-  }
+  };
 
   const setPlayerBoard = (player, computer) => {
     const table = document.createElement('table');
@@ -140,7 +135,8 @@ const domManager = (() => {
     const editContainer = document.querySelector('.edit-container');
     const containerTableShips = document.querySelector('.table-ships');
     containerTableShips.appendChild(table);
-    let row, td;
+    let row; let
+      td;
     for (let i = 0; i < 10; i += 1) {
       row = document.createElement('tr');
       table.appendChild(row);
@@ -161,13 +157,13 @@ const domManager = (() => {
     editContainer.appendChild(random);
     editContainer.appendChild(start);
 
-    table.addEventListener('dragover', () => {
+    table.addEventListener('dragover', (event) => {
       event.preventDefault();
     }, false);
 
-    table.addEventListener('drop', () => {
+    table.addEventListener('drop', (event) => {
       event.preventDefault();
-      const text = event.dataTransfer.getData("text");
+      const text = event.dataTransfer.getData('text');
       const array = text.split('_');
       const allBefore = array[0].split(' ');
       const originId = allBefore[0].split('-');
@@ -184,7 +180,6 @@ const domManager = (() => {
     }, false);
 
 
-
     random.addEventListener('click', () => {
       player.placeShips();
       displaykShips(player);
@@ -197,10 +192,13 @@ const domManager = (() => {
       editContainer.removeChild(start);
       domManager.renderBoard(player, computer);
     }, false);
-  }
+  };
 
-  const computerAction = (player, compMove, move, go, computer) => {
-    let first = [compMove[0], compMove[1], compMove[2]];
+  const computerAction = (player, compMoveTo, moveTo, goTo, computer) => {
+    let compMove = compMoveTo;
+    let move = moveTo;
+    let go = goTo;
+    const first = [compMove[0], compMove[1], compMove[2]];
     let shot;
     if (go.length === 0) {
       go = computer.whereToGo(compMove[0], compMove[1], player.board, first, []);
@@ -217,7 +215,7 @@ const domManager = (() => {
     move = computer.makeSmartMove(go[0][0], go[0][1], player.board, player.ships, first);
     smart = [compMove, move, go];
     if (!computer.smart) {
-      const ship = player.ships.find(ship => ship.name == name);
+      const ship = player.ships.find((element) => element.name === name);
       computer.makeAttacks(ship, player);
       compMove = computer.makeMove(player.board, player.ships);
       shot = document.getElementById(`P-${compMove[0]}-${compMove[1]}`);
@@ -233,7 +231,7 @@ const domManager = (() => {
     if (shot.className === 'hit disable-event' && computer.smart) {
       computerAction(player, compMove, move, go, computer);
     }
-  }
+  };
 
   const renderBoard = (player, computer) => {
     const tableP = document.createElement('table');
@@ -246,8 +244,10 @@ const domManager = (() => {
     </div>
   </div>`;
     tableP.classList.add('disable-event');
-    let rowP, rowC;
-    let tdP, tdC;
+    let rowP; let
+      rowC;
+    let tdP; let
+      tdC;
     const playerBoardContainer = document.querySelector('.player-board');
     const computerBoardContainer = document.querySelector('.computer-board');
     const container = document.querySelector('.container');
@@ -276,8 +276,8 @@ const domManager = (() => {
         }
         rowP.appendChild(tdP);
         rowC.appendChild(tdC);
-        tdC.addEventListener('click', () => {
-
+        tdC.addEventListener('click', (e) => {
+          const event = e;
           const coord = event.target.id.split('-');
           if (typeof computer.board[coord[1]][coord[2]] === 'string') {
             event.target.className = 'hit disable-event';
@@ -307,7 +307,7 @@ const domManager = (() => {
               computerAction(player, smart[0], smart[1], smart[2], computer);
             }
           } else {
-            const ship = computer.ships.find(ship => ship.name == name);
+            const ship = computer.ships.find((element) => element.name === name);
             if (ship.isSunk()) {
               player.makeAttacks(ship, computer);
             }
@@ -320,10 +320,9 @@ const domManager = (() => {
         }, false);
       }
     }
-  }
+  };
 
   return { renderBoard, setPlayerBoard };
-
 })();
 
 export default domManager;

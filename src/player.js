@@ -89,7 +89,6 @@ const Player = (ships, gameBoard) => ({
   },
   makeAttacks(ship, computer) {
     const { board } = computer;
-    const { ships } = computer;
     const elements = [];
     if (ship.orientation === 'vertical') {
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {

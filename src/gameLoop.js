@@ -1,10 +1,11 @@
 import GameBoard from './gameBoard';
 import Player from './player';
-import Computer from './computer'
+import Computer from './computer';
 import Ship from './ship';
 import domManager from './domManager';
 
-let player, computer;
+let player; let
+  computer;
 
 const gameLoop = () => {
   const gameBoard = GameBoard();
