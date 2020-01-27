@@ -170,7 +170,6 @@ const domManager = (() => {
       const allBefore = array[0].split(' ');
       const originId = allBefore[0].split('-');
       const origin = document.getElementById(`td-${originId[1]}-${originId[2]}`);
-    
       if (origin && origin.className === 'ship move' && event.target.id !== 'edit-table') {
         const steps = array[1].split(' ');
         const result = player.changeShip(origin, event.target, steps);
