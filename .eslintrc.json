@@ -15,5 +15,6 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-loop-func": "off"
     }
 }
