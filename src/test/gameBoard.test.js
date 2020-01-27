@@ -1,5 +1,5 @@
-const GameBoard = require('../gameBoard');
-const Ship = require('../ship');
+import GameBoard from '../gameBoard';
+import Ship from '../ship';
 
 describe('gameboard validity tests', () => {
   let gameBoard;
@@ -11,7 +11,7 @@ describe('gameboard validity tests', () => {
     gameBoard = GameBoard();
     board = gameBoard.createBoard();
     ship = Ship(5, 'A');
-    ship2 = Ship(4, 'B')
+    ship2 = Ship(4, 'B');
   });
 
   test('creates valid gameboard', () => {
@@ -58,13 +58,11 @@ describe('gameboard validity tests', () => {
 describe('Receive Attack function', () => {
   let gameBoard;
   let board;
-  let ship;
   let ships;
 
   beforeEach(() => {
     gameBoard = GameBoard();
     board = gameBoard.createBoard();
-    ship = Ship(5, 'A');
     ships = [Ship(5, 'A'), Ship(4, 'B'), Ship(3, 'C'), Ship(3, 'S'), Ship(2, 'D')];
   });
 

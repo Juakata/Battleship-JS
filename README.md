@@ -37,6 +37,11 @@ npx webpack
 npm run test
 ```
 
+5. To run the project in production mode (creates dist folder)
+```
+npm run build
+```
+
 ## Authors
 
 👤 **Andoni Uzquiano**

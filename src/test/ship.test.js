@@ -1,4 +1,4 @@
-const Ship = require('../ship');
+import Ship from '../ship';
 
 describe('ship validity tests', () => {
   let ship;
@@ -7,21 +7,21 @@ describe('ship validity tests', () => {
     ship = Ship(5, 'A');
   });
 
-  test("Test length of ship", () => {
+  test('Test length of ship', () => {
     expect(ship.size).toBe(5);
-  })
+  });
 
-  test("Checks if ship is hit", () => {
+  test('Checks if ship is hit', () => {
     expect(ship.life).toBe(ship.size);
     ship.hit();
     expect(ship.life).toBe(ship.size - 1);
-  })
+  });
 
-  test("Checks if ship is sunk", () => {
-    expect(ship.isSunk()).toBe(false)
+  test('Checks if ship is sunk', () => {
+    expect(ship.isSunk()).toBe(false);
     for (let i = 0; i < 5; i += 1) {
       ship.hit(i);
     }
     expect(ship.isSunk()).toBe(true);
-  })
+  });
 });

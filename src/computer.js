@@ -110,6 +110,10 @@ const Computer = (ships, gameBoard) => ({
     let send;
     if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !no.includes(0)) {
       send = [x + 1, y];
+      if (typeof board[x + 1][y] === 'string') {
+        not.push(2);
+        not.push(3);
+      }
     } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !no.includes(1)) {
       if (!not.includes(0)) {
         no.push(0);
@@ -166,4 +170,4 @@ const Computer = (ships, gameBoard) => ({
   },
 });
 
-module.exports = Computer;
+export default Computer;

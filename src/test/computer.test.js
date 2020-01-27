@@ -1,13 +1,14 @@
-const Computer = require('../computer');
-const Ship = require('../ship');
-const GameBoard = require('../gameBoard');
-const Player = require('../player');
+import Computer from '../computer';
+import Ship from '../ship';
+import GameBoard from '../gameBoard';
+import Player from '../player';
 
 describe('Player tests', () => {
   let computer;
   let ships;
   let gameBoard;
   let player;
+  let go;
 
   beforeEach(() => {
     gameBoard = GameBoard();
@@ -33,22 +34,22 @@ describe('Player tests', () => {
         if (typeof el === 'string') {
           count += 1;
         }
-      })
-    })
+      });
+    });
     expect(count).toBe(17);
   });
 
   test('Computer should make a valid attack', () => {
     let result = 0;
     expect(computer.options.length).toBe(100);
-    for (let i = 0; i < 101; i += 1) {
+    for (let i = 0; i < 100; i += 1) {
       computer.makeMove(player.board, ships);
     }
     player.board.forEach(e => {
       if (e.includes(false)) {
         result += 1;
       }
-    })
+    });
     expect(result).toBe(0);
     expect(computer.options.length).toBe(0);
   });
@@ -57,7 +58,7 @@ describe('Player tests', () => {
     gameBoard.addShip(0, 0, player.board, 'horizontal', ships[0]);
     const not = [];
     const hit = computer.makeSmartMove(0, 0, player.board, ships, [0, 0, 'A']);
-    let first = [0, 0, 'A'];
+    const first = [0, 0, 'A'];
     go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
     let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
     expect(go[0]).toMatchObject([1, 0]);
@@ -82,7 +83,8 @@ describe('Player tests', () => {
   test('Computer should destroy all ships', () => {
     player.placeShips();
     for (let i = 0; i < 5; i += 1) {
-      let first, go, move;
+      let first; let go; let
+        move;
       const not = [];
       while (!computer.smart) {
         first = computer.makeMove(player.board, ships);
@@ -108,7 +110,7 @@ describe('Player tests', () => {
     gameBoard.addShip(0, 5, player.board, 'horizontal', ships[0]);
     const not = [];
     const hit = computer.makeSmartMove(0, 7, player.board, ships, [0, 7, 'A']);
-    let first = [0, 7, 'A'];
+    const first = [0, 7, 'A'];
     go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
     let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
     expect(go[0]).toMatchObject([1, 7]);
@@ -135,7 +137,7 @@ describe('Player tests', () => {
     gameBoard.addShip(2, 0, player.board, 'vertical', ships[1]);
     const not = [];
     const hit = computer.makeSmartMove(3, 0, player.board, ships, [3, 0, 'B']);
-    let first = [3, 0, 'B'];
+    const first = [3, 0, 'B'];
     go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
     let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
     expect(go[0]).toMatchObject([4, 0]);
@@ -158,7 +160,7 @@ describe('Player tests', () => {
     gameBoard.addShip(6, 8, player.board, 'vertical', ships[1]);
     const not = [];
     const hit = computer.makeSmartMove(8, 8, player.board, ships, [8, 8, 'B']);
-    let first = [8, 8, 'B'];
+    const first = [8, 8, 'B'];
     go = computer.whereToGo(hit[0], hit[1], player.board, first, not);
     let move = computer.makeSmartMove(go[0][0], go[0][1], player.board, ships, first);
     expect(go[0]).toMatchObject([9, 8]);
@@ -172,4 +174,4 @@ describe('Player tests', () => {
     expect(go[0]).toMatchObject([6, 8]);
     expect(move).toMatchObject([6, 8]);
   });
-})
+});
