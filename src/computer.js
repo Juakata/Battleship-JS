@@ -7,12 +7,12 @@ const Computer = (ships, gameBoard) => ({
     const r1 = Math.floor(Math.random() * this.options.length);
     let r2 = Math.floor(Math.random() * 2);
     if (r2 === 0) {
-      r2 = "horizontal";
+      r2 = 'horizontal';
     } else {
-      r2 = "vertical";
+      r2 = 'vertical';
     }
 
-    return [r1, r2]
+    return [r1, r2];
   },
   removeFromOption(arr) {
     let i = 0;
@@ -25,11 +25,10 @@ const Computer = (ships, gameBoard) => ({
     }
   },
   makeAttacks(ship, player) {
-    const board = player.board;
-    const ships = player.ships;
+    const { board } = player;
     const elements = [];
     const first = [0, 0, 'A'];
-    if(ship.orientation === 'vertical'){
+    if (ship.orientation === 'vertical') {
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
         elements.push([i, ship.first[1]]);
       }
@@ -38,7 +37,7 @@ const Computer = (ships, gameBoard) => ({
         elements.push([ship.first[0], i]);
       }
     }
-    elements.forEach(e => {
+    elements.forEach((e) => {
       if (!gameBoard.checkNull(e[0] + 1, e[1], board) && typeof board[e[0] + 1][e[1]] !== 'number') {
         this.makeSmartMove(e[0] + 1, e[1], board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1]}`).className = 'water';
@@ -67,7 +66,7 @@ const Computer = (ships, gameBoard) => ({
         this.makeSmartMove(e[0] + 1, e[1] - 1, board, ships, first);
         document.getElementById(`P-${e[0] + 1}-${e[1] - 1}`).className = 'water';
       }
-      if (!gameBoard.checkNull(e[0] - 1 , e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
+      if (!gameBoard.checkNull(e[0] - 1, e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
         this.makeSmartMove(e[0] - 1, e[1] + 1, board, ships, first);
         document.getElementById(`P-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
@@ -81,93 +80,90 @@ const Computer = (ships, gameBoard) => ({
     while (i < 5) {
       randoms = this.getRandomPositions();
       hitOn = this.options[randoms[0]];
-      this.options.splice(randoms[0], 1)
+      this.options.splice(randoms[0], 1);
       result = gameBoard.canPlace(hitOn[0], hitOn[1], this.board, randoms[1], ships[i]);
       if (result) {
-        gameBoard.addShip(hitOn[0], hitOn[1], this.board, randoms[1], ships[i])
+        gameBoard.addShip(hitOn[0], hitOn[1], this.board, randoms[1], ships[i]);
         i += 1;
       }
     }
     this.options = gameBoard.getOptions();
   },
-  makeMove(board, ships) {
+  makeMove(board, shipsArr) {
+    const randoms = this.getRandomPositions();
+    const hitOn = this.options[randoms[0]];
     if (this.options.length > 0) {
-      let randoms = this.getRandomPositions();
-      let hitOn = this.options[randoms[0]];
       this.options.splice(randoms[0], 1);
       const name = board[hitOn[0]][hitOn[1]];
-      gameBoard.receiveAttack(hitOn[0], hitOn[1], board, ships);
-      if (board[hitOn[0]][hitOn[1]] == 1) {
+      gameBoard.receiveAttack(hitOn[0], hitOn[1], board, shipsArr);
+      if (board[hitOn[0]][hitOn[1]] === 1) {
         this.smart = true;
         return [hitOn[0], hitOn[1], name];
-      } else {
-        return [hitOn[0], hitOn[1]];
       }
     }
+    return [hitOn[0], hitOn[1]];
   },
-  whereToGo(x, y, board, first, not) {
+  whereToGo(a, b, board, first, not) {
+    let x = a;
+    let y = b;
+    let no = not;
     let send;
-    if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !not.includes(0)) {
+    if (!gameBoard.checkNull(x + 1, y, board) && typeof board[x + 1][y] !== 'number' && !no.includes(0)) {
       send = [x + 1, y];
-      if (typeof board[x + 1][y] === "string") {
-        not.push(2);
-        not.push(3);
-      }
-    } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !not.includes(1)) {
+    } else if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number' && !no.includes(1)) {
       if (!not.includes(0)) {
-        not.push(0);
+        no.push(0);
       }
       send = [x - 1, y];
-    } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !not.includes(2)) {
+    } else if (!gameBoard.checkNull(x, y + 1, board) && typeof board[x][y + 1] !== 'number' && !no.includes(2)) {
       for (let i = 0; i < 2; i += 1) {
         if (!not.includes(i)) {
-          not.push(i);
+          no.push(i);
         }
       }
       send = [x, y + 1];
     } else if (!gameBoard.checkNull(x, y - 1, board) && typeof board[x][y - 1] !== 'number' && !not.includes(3)) {
       for (let i = 0; i < 3; i += 1) {
-        if (!not.includes(i)) {
-          not.push(i);
+        if (!no.includes(i)) {
+          no.push(i);
         }
       }
       send = [x, y - 1];
     } else {
-      not = [];
-      x = first[0];
-      y = first[1];
-      if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'integer') {
+      no = [];
+      [x, y] = [first[0], first[1]];
+      if (!gameBoard.checkNull(x - 1, y, board) && typeof board[x - 1][y] !== 'number') {
         send = [x - 1, y];
-        not.push(0);
+        no.push(0);
       } else {
         send = [x, y - 1];
         for (let i = 0; i < 3; i += 1) {
-          not.push(i);
+          no.push(i);
         }
       }
     }
-    return [send, not];
+    return [send, no];
   },
-  makeSmartMove(x, y, board, ships, first) {
+  makeSmartMove(x, y, board, shipsArr, first) {
+    let send;
     if (this.options.length > 0) {
-      let send;
       if (typeof board[x][y] === 'string') {
         send = [x, y];
       } else {
         send = [first[0], first[1]];
       }
       this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, ships);
-      const ship = ships.find(ship => ship.name == first[2]);
+      gameBoard.receiveAttack(x, y, board, shipsArr);
+      const ship = shipsArr.find((element) => element.name === first[2]);
       if (ship.isSunk()) {
         this.smart = false;
       }
-      return send;
     }
+    return send;
   },
   gameOver() {
     return gameBoard.allShipsSunk(ships);
-  }
+  },
 });
 
 module.exports = Computer;

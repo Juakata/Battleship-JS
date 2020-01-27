@@ -7,21 +7,21 @@ const Player = (ships, gameBoard) => ({
     const r2 = Math.floor(Math.random() * 10);
     let r3 = Math.floor(Math.random() * 2);
     if (r3 === 0) {
-      r3 = "horizontal";
+      r3 = 'horizontal';
     } else {
-      r3 = "vertical";
+      r3 = 'vertical';
     }
 
-    return [r1, r2, r3]
+    return [r1, r2, r3];
   },
   changeShip(origin, first, steps) {
-    let ox = parseInt(origin.id.split('-')[1]);
-    let oy = parseInt(origin.id.split('-')[2]);
-    let x = parseInt(first.id.split('-')[1]);
-    let y = parseInt(first.id.split('-')[2]);
+    const ox = parseInt(origin.id.split('-')[1], 10);
+    const oy = parseInt(origin.id.split('-')[2], 10);
+    let x = parseInt(first.id.split('-')[1], 10);
+    let y = parseInt(first.id.split('-')[2], 10);
     const shipSaved = [];
     const shipName = this.board[ox][oy];
-    const ship = ships.find(element => element.name == shipName);
+    const ship = ships.find((element) => element.name === shipName);
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
         if (this.board[i][j] === shipName) {
@@ -30,17 +30,19 @@ const Player = (ships, gameBoard) => ({
         }
       }
     }
-    steps.forEach(step => {
+    steps.forEach((step) => {
       const go = step.split('-')[0];
       const max = step.split('-')[1];
       for (let i = 0; i < max; i += 1) {
         switch (go) {
           case 'up':
-              x -= 1;
-              break;
+            x -= 1;
+            break;
           case 'left':
-              y -= 1;
-              break;
+            y -= 1;
+            break;
+          default:
+            break;
         }
       }
     });
@@ -48,7 +50,7 @@ const Player = (ships, gameBoard) => ({
     if (result) {
       gameBoard.addShip(x, y, this.board, ship.orientation, ship);
     } else {
-      shipSaved.forEach(save => {
+      shipSaved.forEach((save) => {
         this.board[save[0]][save[1]] = shipName;
       });
     }
@@ -63,7 +65,7 @@ const Player = (ships, gameBoard) => ({
       randoms = this.getRandomPositions();
       result = gameBoard.canPlace(randoms[0], randoms[1], this.board, randoms[2], ships[i]);
       if (result) {
-        gameBoard.addShip(randoms[0], randoms[1], this.board, randoms[2], ships[i])
+        gameBoard.addShip(randoms[0], randoms[1], this.board, randoms[2], ships[i]);
         i += 1;
       }
     }
@@ -79,17 +81,17 @@ const Player = (ships, gameBoard) => ({
       i += 1;
     }
   },
-  makeMove(x, y, board, ships) {
+  makeMove(x, y, board, shipsArr) {
     if (this.options.length > 0) {
       this.removeFromOption([x, y]);
-      gameBoard.receiveAttack(x, y, board, ships);
+      gameBoard.receiveAttack(x, y, board, shipsArr);
     }
   },
   makeAttacks(ship, computer) {
-    const board = computer.board;
-    const ships = computer.ships;
+    const { board } = computer;
+    const { ships } = computer;
     const elements = [];
-    if(ship.orientation === 'vertical'){
+    if (ship.orientation === 'vertical') {
       for (let i = ship.first[0]; i < ship.size + ship.first[0]; i += 1) {
         elements.push([i, ship.first[1]]);
       }
@@ -98,7 +100,7 @@ const Player = (ships, gameBoard) => ({
         elements.push([ship.first[0], i]);
       }
     }
-    elements.forEach(e => {
+    elements.forEach((e) => {
       if (!gameBoard.checkNull(e[0] + 1, e[1], board) && typeof board[e[0] + 1][e[1]] !== 'number') {
         this.makeMove(e[0] + 1, e[1], board, ships);
         document.getElementById(`C-${e[0] + 1}-${e[1]}`).className = 'water';
@@ -127,7 +129,7 @@ const Player = (ships, gameBoard) => ({
         this.makeMove(e[0] + 1, e[1] - 1, board, ships);
         document.getElementById(`C-${e[0] + 1}-${e[1] - 1}`).className = 'water';
       }
-      if (!gameBoard.checkNull(e[0] - 1 , e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
+      if (!gameBoard.checkNull(e[0] - 1, e[1] + 1, board) && typeof board[e[0] - 1][e[1] + 1] !== 'number') {
         this.makeMove(e[0] - 1, e[1] + 1, board, ships);
         document.getElementById(`C-${e[0] - 1}-${e[1] + 1}`).className = 'water';
       }
@@ -135,7 +137,7 @@ const Player = (ships, gameBoard) => ({
   },
   gameOver() {
     return gameBoard.allShipsSunk(ships);
-  }
+  },
 });
 
 module.exports = Player;
