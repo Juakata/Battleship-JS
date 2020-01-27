@@ -15,15 +15,7 @@
         "no-shadow": "off",
         "no-param-reassign": "off",
         "eol-last": "off",
-        "arrow-parens": "off"
-    },
-    "settings": {
-        "import/resolver": {
-            "node": {
-                "paths": [
-                    "src"
-                ]
-            }
-        }
+        "arrow-parens": "off",
+        "import/no-unresolved": "off"
     }
 }
