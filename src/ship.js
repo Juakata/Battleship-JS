@@ -4,14 +4,13 @@ const Ship = (size, name, first, orientation) => ({
   first,
   orientation,
   life: size,
-  hit() { this.life -= 1 },
+  hit() { this.life -= 1; },
   isSunk() {
-    if (this.life == 0) {
+    if (this.life === 0) {
       return true;
-    } else {
-      return false;
     }
-  }
+    return false;
+  },
 });
 
 module.exports = Ship;
