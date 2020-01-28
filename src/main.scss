@@ -178,6 +178,7 @@ header {
 }
 
 .edit-container {
+  overflow: auto;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -185,7 +186,6 @@ header {
   left: 0;
   right: 0;
   margin: auto;
-  padding: 20px;
   background: rgba(255, 255, 255, 0.8);
   text-align: center;
 }
