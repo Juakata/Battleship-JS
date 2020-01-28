@@ -15,7 +15,7 @@
 
 ## Live Demo
 
-[Live Demo Link](https://raw.githack.com/Juakata/Battleship-JS/game/dist/index.html)
+[Live Demo Link](https://focused-bhaskara-527116.netlify.com/)
 
 ## Installation
 
