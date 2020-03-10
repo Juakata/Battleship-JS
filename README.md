@@ -1,9 +1,8 @@
 # Battleship-JS
 
-> This project is our version of the Battleship game implemented with JavaScript,it uses Webpack and Jest for testing.
+> This project is our version of the Battleship game, implemented with JavaScript. It uses Webpack and Jest for testing, you can place the ships wherever you want and place them randomly as well. Once you start the game you can start hitting the computer's board.
 
 ![library](https://user-images.githubusercontent.com/51210302/73201727-48c61280-40ff-11ea-9d0b-110223bcb727.png)
-
 
 ## Built With
 
@@ -48,13 +47,13 @@ npm run build
 
 - Github: [@Juakata](https://github.com/Juakata)
 - Twitter: [@HUzquiano](https://twitter.com/HUzquiano)
-- Linkedin: [linkedin](https://www.linkedin.com/in/andoni-uzquiano-31304818a/)
+- Linkedin: [@Andoni](https://www.linkedin.com/in/andoni-uzquiano-31304818a/)
 
 👤 **Rodolfo Cisneros**
 
 - Github: [@rociac](https://github.com/rociac)
 - Twitter: [@AcostaRca](https://twitter.com/AcostaRca)
-- Linkedin: [linkedin](https://www.linkedin.com/in/rociac/)
+- Linkedin: [@Cisneros](https://www.linkedin.com/in/rociac/)
 
 ## 🤝 Contributing
 
@@ -68,4 +67,4 @@ Give a ⭐️ if you like this project!
 
 ## 📝 License
 
-This project is [MiT](https://opensource.org/licenses/MIT) licensed.
+This project is [MIT](https://opensource.org/licenses/MIT) licensed.
