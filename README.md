@@ -41,6 +41,11 @@ npm run test
 npm run build
 ```
 
+## Future Features
+
+- The user is able to change the orientation of the ship while editing the board.
+- The user is able to play against another user.
+
 ## Authors
 
 👤 **Andoni Uzquiano**
