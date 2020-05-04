@@ -1,6 +1,6 @@
 # Battleship-JS
 
-> This project is our version of the Battleship game, implemented with JavaScript. It uses Webpack and Jest for testing, you can place the ships wherever you want and place them randomly as well. Once you start the game you can start hitting the computer's board.
+> This project is our version of the Battleship game, implemented with JavaScript. It uses webpack and Jest for testing. Users can place ships wherever they want, or place them randomly. Once you start the game, you can then start hitting the computer's board.
 
 ![library](https://user-images.githubusercontent.com/51210302/73201727-48c61280-40ff-11ea-9d0b-110223bcb727.png)
 
@@ -31,7 +31,7 @@ npx webpack
 ```
 3. Open index.html in your browser.
 
-4. To test run
+4. To test, run:
 ```
 npm run test
 ```
